@@ -1,13 +1,15 @@
 {
-  "name": "WingMe App",
-  "description": "",
-  "main": "index.js",
+  "name": "wingme-app",
+  "private": "true",
   "authors": [
     "Kan Adachi",
     "Xiaolu Bai",
     "Ben Richter",
     "Jessica Chou"
   ],
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.2.4"
+  },
   "license": "ISC",
   "homepage": "",
   "private": true,
