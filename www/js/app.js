@@ -1,13 +1,18 @@
-// Ionic Starter App
+(function() {
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('wingme', ['ionic', 'starter.controllers', 'starter.services'])
+var app = angular.module('wingme', ['ionic', 'wingme.controllers', 'wingme.services'])
 
-.run(function($ionicPlatform) {
+app.run(run)
+app.config(config);
+
+// register dependencies
+angular.module('wingme.controllers', []);
+angular.module('wingme.services', []);
+
+// --------------------------------------
+// --------------------------------------
+
+function run($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -21,9 +26,9 @@ angular.module('wingme', ['ionic', 'starter.controllers', 'starter.services'])
       StatusBar.styleDefault();
     }
   });
-})
+}
 
-.config(function($stateProvider, $urlRouterProvider) {
+function config($stateProvider, $urlRouterProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -82,4 +87,7 @@ angular.module('wingme', ['ionic', 'starter.controllers', 'starter.services'])
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/dash');
 
-});
+}
+
+
+})(); // end
