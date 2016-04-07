@@ -1,8 +1,8 @@
 (function() {
 
-var app = angular.module('wingme', ['ionic', 'wingme.controllers', 'wingme.services'])
+var app = angular.module('wingme', ['ionic', 'wingme.controllers', 'wingme.services']);
 
-app.run(run)
+app.run(run);
 app.config(config);
 
 // register dependencies
@@ -46,11 +46,11 @@ function config($stateProvider, $urlRouterProvider) {
   // Each tab has its own nav history stack:
 
   .state('tab.dash', {
-    url: '/dash',
+    url: '/addWing',
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+      'tab-addWing': {
+        templateUrl: 'templates/tab-addWing.html',
+        controller: 'AddWing'
       }
     }
   })
@@ -76,7 +76,8 @@ function config($stateProvider, $urlRouterProvider) {
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  // EDIT THIS
+  $urlRouterProvider.otherwise('/tab/addWing');
 
 }
 

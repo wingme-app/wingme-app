@@ -2,7 +2,8 @@
 
 var module = angular.module('wingme.controllers');
 
-module.controller('DashCtrl', function($scope) {
+module.controller('AddWing', function() {
+	this.val = 1;
 
   //
 
