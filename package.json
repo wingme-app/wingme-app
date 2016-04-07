@@ -4,6 +4,7 @@
   "description": "myApp: An Ionic project",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.15.0",
     "bookshelf": "^0.9.4",
     "express": "^4.13.4",
     "gulp": "^3.5.6",
