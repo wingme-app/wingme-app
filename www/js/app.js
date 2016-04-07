@@ -45,12 +45,12 @@ function config($stateProvider, $urlRouterProvider) {
 
   // Each tab has its own nav history stack:
 
-  .state('tab.dash', {
+  .state('tab.addWing', {
     url: '/addWing',
     views: {
       'tab-addWing': {
         templateUrl: 'templates/tab-addWing.html',
-        controller: 'AddWing'
+        controller: 'AddWingCtrl as addWing'
       }
     }
   })

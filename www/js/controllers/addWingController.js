@@ -2,8 +2,10 @@
 
 var module = angular.module('wingme.controllers');
 
-module.controller('AddWing', function() {
-	this.val = 1;
+module.controller('AddWingCtrl', function() {
+	this.submit = function(){
+		console.log("Submit clicked!");
+	};
 
   //
 
