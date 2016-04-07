@@ -55,11 +55,11 @@ function config($stateProvider, $urlRouterProvider) {
     }
   })
 
-  .state('tab.chats', { // my wings
+  .state('tab.myWings', { // my wings
       url: '/myWings',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-wings.html',
+        'tab-myWings': {
+          templateUrl: 'templates/tab-myWings.html',
           controller: 'WingRequestsCtrl as myWings'
         }
       }
