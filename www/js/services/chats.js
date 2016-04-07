@@ -1,6 +1,12 @@
-angular.module('starter.services', [])
+(function() {
 
-.factory('Chats', function() {
+var module = angular.module('wingme.services');
+
+module.factory('Chats', chats);
+
+// --------------------------------------
+
+function chats() {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
@@ -47,4 +53,6 @@ angular.module('starter.services', [])
       return null;
     }
   };
-});
+}
+
+})(); // end
