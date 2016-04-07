@@ -3,6 +3,7 @@
 
 # Node .gitignore
 # @https://github.com/github/gitignore/blob/master/Node.gitignore
+#
 
 # Logs
 logs
@@ -42,8 +43,16 @@ jspm_packages
 
 # Bower Components
 # @http://stackoverflow.com/questions/22327758/should-bower-components-be-gitignored
+#
 
 dist
 .tmp
 .sass-cache
 bower_components
+
+# Ionic
+#
+#
+
+platforms/
+plugins/
