@@ -5,19 +5,30 @@ navigation history that also transitions its views in and out.
 -->
 <ion-tabs class="tabs-icon-top tabs-color-active-positive">
 
-  <!-- Dashboard Tab -->
-  <ion-tab title="Status" icon-off="ion-ios-pulse" icon-on="ion-ios-pulse-strong" href="#/tab/dash">
+  <!-- Add Wing Tab -->
+  <ion-tab title="Add Wing" icon-off="ion-ios-plus-empty" 
+  icon-on="ion-android-add" 
+  href="#/tab/dash">
+    <!-- change tab-dash -->
     <ion-nav-view name="tab-dash"></ion-nav-view>
   </ion-tab>
 
-  <!-- Chats Tab -->
-  <ion-tab title="Chats" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/chats">
+  <!-- Wing Status / MyWings-->
+  <ion-tab title="My Wings" icon-off="ion-person-stalker" icon-on="ion-person-stalker" href="#/tab/chats">
+    <!-- change tab-chats -->
     <ion-nav-view name="tab-chats"></ion-nav-view>
   </ion-tab>
 
-  <!-- Account Tab -->
-  <ion-tab title="Account" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account">
+  <!-- Find Duo -->
+  <ion-tab title="Find Duo" icon-off="ion-ios-search" icon-on="ion-ios-search-strong" href="#/tab/account">
+    <!-- change tab-account -->
     <ion-nav-view name="tab-account"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Duos Status -->
+  <ion-tab title="My Duos" icon-off="ion-ios-paper-outline" icon-on="ion-ios-paper-outline" href="">
+    <!-- change tab-account -->
+    <!-- <ion-nav-view name="tab-account"></ion-nav-view> -->
   </ion-tab>
 
 

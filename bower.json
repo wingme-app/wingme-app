@@ -1,6 +1,6 @@
 {
   "name": "wingme-app",
-  "private": "true",
+  "private": true,
   "authors": [
     "Kan Adachi",
     "Xiaolu Bai",
@@ -12,12 +12,14 @@
   },
   "license": "ISC",
   "homepage": "",
-  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "Ionicons": "ionicons#^2.0.1"
+  }
 }
