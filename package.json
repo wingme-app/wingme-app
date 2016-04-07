@@ -4,12 +4,13 @@
   "description": "myApp: An Ionic project",
   "main": "server.js",
   "dependencies": {
+    "bookshelf": "^0.9.4",
+    "express": "^4.13.4",
     "gulp": "^3.5.6",
-    "gulp-sass": "^2.0.4",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
     "gulp-rename": "^1.2.0",
-    "bookshelf": "^0.9.4",
+    "gulp-sass": "^2.0.4",
     "knex": "^0.10.0"
   },
   "devDependencies": {
