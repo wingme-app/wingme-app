@@ -6,68 +6,98 @@ module.factory('Wings', wings);
 
 // --------------------------------------
 
-function wings($http, $location) {
+function wings($http, $state) {
 
   var currentWings = [];
 
-  init();
-
   return {
-    get: get, // gets all wings from /api/wings/requests
-    post: post, // post wing to /api/wings/requests
+    getWings: getWings, // gets all wings from /api/wings/requests
+    updateWing: updateWing, // post wing to /api/wings/requests
     addWingPost: addWingPost
   };
 
   // ------------
 
-  function init() {
-    
-  }
+  function getWings() {
 
-  function get() {
-
-    $http({
+    var request = {
       method: 'GET',
       url: 'http://localhost:8000/api/wings/requests'
-    }).then(function successCallback(response) {
-      response.data.potentialWings.forEach(function(wing) {
-        currentWings.push(wing);
-      });
-      return currentWings;
-    }, function errorCallback(response) {
+    }
 
-    });
+    $http(request)
+      .then(success, error)
 
     return currentWings;
+
+    // -----------------
+    // request callbacks
+
+    function success(response) {
+      response.data.potentialWings.forEach(function(wing) {
+        // we manipulate the current wings variable instead of reassigning the variable.
+        // this forces a digest cycle refresh.
+        currentWings.push(wing);
+        return currentWings;
+      });
+    }
+
+    function error(response) {
+      // TODO: error handling 
+    }
   }
 
-  function post(username, index, status) {
+  function updateWing(username, index, status) {
     // index is the position inside of the array of wings given to us in the get request.
 
-    $http({
+    var request = {
       method: 'POST',
       url: 'http://localhost:8000/api/wings/requests',
       data: {
         "wing" : username,
         "accepted" : status
       }
-    });
+    };
 
+    $http(request)
+      .then(success, error);
+
+    // -----------------
+    // request callbacks
+
+    function success(response) {
+      console.log(response);
+    }
+
+    function error(response) {
+      // TODO: error handling
+    }
   }
 
   function addWingPost(username) {
-     $http({
+
+    var request = {
       method: 'POST',
       url: 'http://localhost:8000/api/wings/add',
       data: {
         wingToAdd: username
       }
-    }).then(function successCallback(response) {
-      console.log('this is response, line 61: ', response);
-      $location.path('/myWings');
-    }, function errorCallback(response) {
-      console.log('inside error, line 64');
-    });
+    };
+
+     $http(request)
+       .then(success, error);
+
+    // -----------------
+    // request callbacks
+
+    function success(response) {
+      console.log(response);
+      $state.go('tab.addWing');
+    }
+
+    function error(response) {
+      // TODO: error handling
+    }
   }
 }
 
