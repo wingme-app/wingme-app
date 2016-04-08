@@ -6,7 +6,7 @@ module.factory('Wings', wings);
 
 // --------------------------------------
 
-function wings($http) {
+function wings($http, $location) {
 
   var currentWings = [];
 
@@ -14,8 +14,9 @@ function wings($http) {
 
   return {
     get: get, // gets all wings from /api/wings/requests
-    post: post // post wing to /api/wings/requests
-  }
+    post: post, // post wing to /api/wings/requests
+    addWingPost: addWingPost
+  };
 
   // ------------
 
@@ -27,7 +28,7 @@ function wings($http) {
 
     $http({
       method: 'GET',
-      url: 'http://localhost:5000/api/wings/requests'
+      url: 'http://localhost:8000/api/wings/requests'
     }).then(function successCallback(response) {
       response.data.potentialWings.forEach(function(wing) {
         currentWings.push(wing);
@@ -49,6 +50,20 @@ function wings($http) {
     // }
     $http()
 
+  }
+
+  function addWingPost(obj) {
+     $http({
+      method: 'POST',
+      data: obj,
+      url: 'http://localhost:8000/api/wings/add'
+    }).then(function successCallback(response) {
+      console.log('this is response, line 61: ', response);
+      $location.path('/myWings');
+    }, function errorCallback(response) {
+      console.log('inside error, line 64');
+
+    });
   }
 }
 
