@@ -11,10 +11,11 @@ module.controller('WingRequestsCtrl', function(Wings) {
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  this.wings = Wings.get();
+  // we call this function (Wings.getWings) to trigger a digest cycle,
+  // since it will need to rerender our ng-repeat.
+  this.wings = Wings.getWings();
  
-
-  this.post = Wings.post;
+  this.updateWing = Wings.updateWing;
 
   this.remove = function(chat) {
     Chats.remove(chat);
