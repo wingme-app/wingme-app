@@ -48,7 +48,7 @@ function wings($http, $location) {
     //   "wing" : "WINGNAME"
     //   "accepted" : true/false
     // }
-    $http()
+    $http();
 
   }
 
