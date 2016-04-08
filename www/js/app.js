@@ -65,15 +65,25 @@ function config($stateProvider, $urlRouterProvider) {
       }
     })
 
-  .state('tab.account', {
-    url: '/account',
+  .state('tab.findMatch', {
+    url: '/findMatch',
     views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+      'tab-findMatch': {
+        templateUrl: 'templates/tab-findMatch.html',
+        controller: 'FindMatchCtrl as findMatch'
       }
     }
   });
+
+  // .state('tab.findMatch', {
+  //   url: '/findMatch',
+  //   views: {
+  //     'tab-account': {
+  //       templateUrl: 'templates/tab-findMatch.html',
+  //       controller: 'FidMatchCtrl as findMatch'
+  //     }
+  //   }
+  // });
 
   // if none of the above states are matched, use this as the fallback
   // EDIT THIS
