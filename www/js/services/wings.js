@@ -41,28 +41,32 @@ function wings($http, $location) {
     return currentWings;
   }
 
-  function post(status) {
-    // status = boolean
-    // make some async call to api with post request
-    // {
-    //   "wing" : "WINGNAME"
-    //   "accepted" : true/false
-    // }
-    $http();
+  function post(username, index, status) {
+    // index is the position inside of the array of wings given to us in the get request.
+
+    $http({
+      method: 'POST',
+      url: 'http://localhost:8000/api/wings/requests',
+      data: {
+        "wing" : username,
+        "accepted" : status
+      }
+    });
 
   }
 
-  function addWingPost(obj) {
+  function addWingPost(username) {
      $http({
       method: 'POST',
-      data: obj,
-      url: 'http://localhost:8000/api/wings/add'
+      url: 'http://localhost:8000/api/wings/add',
+      data: {
+        wingToAdd: username
+      }
     }).then(function successCallback(response) {
       console.log('this is response, line 61: ', response);
       $location.path('/myWings');
     }, function errorCallback(response) {
       console.log('inside error, line 64');
-
     });
   }
 }
