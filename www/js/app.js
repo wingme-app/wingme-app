@@ -1,11 +1,12 @@
 (function() {
 
-var app = angular.module('wingme', ['ionic', 'wingme.controllers', 'wingme.services']);
+var app = angular.module('wingme', ['ionic', 'wingme.authentication', 'wingme.controllers', 'wingme.services']);
 
 app.run(run);
 app.config(config);
 
 // register dependencies
+angular.module('wingme.authentication', []);
 angular.module('wingme.controllers', []);
 angular.module('wingme.services', []);
 
@@ -90,6 +91,5 @@ function config($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/tab/addWing');
 
 }
-
 
 })(); // end
