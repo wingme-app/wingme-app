@@ -246,6 +246,6 @@ app.get('/api/duos/', function(req, res) {
 
 
 
-app.listen(5000, function () {
+app.listen(8000, function () {
   console.log('Dummy API is available at http://localhost:5000');
 });

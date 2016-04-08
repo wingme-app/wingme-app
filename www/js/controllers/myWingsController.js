@@ -12,15 +12,13 @@ module.controller('WingRequestsCtrl', function(Wings) {
   //});
 
   this.wings = Wings.get();
-  setTimeout(function() {
-    console.log(this.wings)
-  }.bind(this), 1000);
+ 
 
   this.post = Wings.post;
 
   this.remove = function(chat) {
     Chats.remove(chat);
   };
-})
+});
 
 })();
