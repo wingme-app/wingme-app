@@ -84,15 +84,15 @@ function wings($http, $state) {
       }
     };
 
-     $http(request)
-       .then(success, error);
+    $http(request)
+     .then(success, error);
 
     // -----------------
     // request callbacks
 
     function success(response) {
       console.log(response);
-      $state.go('tab.addWing');
+      $state.go('tab.myWings');
     }
 
     function error(response) {
