@@ -1,11 +1,12 @@
 (function() {
 
-var app = angular.module('wingme', ['ionic', 'wingme.authentication', 'wingme.controllers', 'wingme.services']);
+var app = angular.module('wingme', ['ionic', 'wingme.config', 'wingme.authentication', 'wingme.controllers', 'wingme.services']);
 
 app.run(run);
-app.config(config);
+app.config(routes);
 
 // register dependencies
+angular.module('wingme.config', []);
 angular.module('wingme.authentication', []);
 angular.module('wingme.controllers', []);
 angular.module('wingme.services', []);
@@ -13,7 +14,7 @@ angular.module('wingme.services', []);
 // --------------------------------------
 // --------------------------------------
 
-function run($ionicPlatform) {
+function run($ionicPlatform, $rootScope, Auth) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -27,15 +28,18 @@ function run($ionicPlatform) {
       StatusBar.styleDefault();
     }
   });
+
 }
 
-function config($stateProvider, $urlRouterProvider) {
+function routes($stateProvider, $urlRouterProvider) {
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
   $stateProvider
+
+  .state('signup', {
+    url: '/signup',
+    templateUrl: 'templates/page-signup.html',
+    controller: 'SignUpCtrl'
+  })
 
   // setup an abstract state for the tabs directive
   .state('tab', {
@@ -45,7 +49,6 @@ function config($stateProvider, $urlRouterProvider) {
   })
 
   // Each tab has its own nav history stack:
-
   .state('tab.addWing', {
     url: '/addWing',
     views: {
@@ -75,6 +78,8 @@ function config($stateProvider, $urlRouterProvider) {
       }
     }
   });
+
+
 
   // .state('tab.findMatch', {
   //   url: '/findMatch',
