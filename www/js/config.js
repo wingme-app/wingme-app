@@ -1,6 +1,6 @@
 (function() {
 
-var module = angular.module('config');
+var module = angular.module('wingme.config');
 
 module.factory('Config', config);
 

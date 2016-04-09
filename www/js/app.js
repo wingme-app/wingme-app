@@ -14,7 +14,7 @@ angular.module('wingme.services', []);
 // --------------------------------------
 // --------------------------------------
 
-function run($ionicPlatform) {
+function run($ionicPlatform, $rootScope, Auth) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -28,11 +28,18 @@ function run($ionicPlatform) {
       StatusBar.styleDefault();
     }
   });
+
 }
 
 function routes($stateProvider, $urlRouterProvider) {
 
   $stateProvider
+
+  .state('signup', {
+    url: '/signup',
+    templateUrl: 'templates/page-signup.html',
+    controller: 'SignUpCtrl'
+  })
 
   // setup an abstract state for the tabs directive
   .state('tab', {
@@ -71,6 +78,8 @@ function routes($stateProvider, $urlRouterProvider) {
       }
     }
   });
+
+
 
   // .state('tab.findMatch', {
   //   url: '/findMatch',
