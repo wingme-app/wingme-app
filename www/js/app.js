@@ -1,11 +1,12 @@
 (function() {
 
-var app = angular.module('wingme', ['ionic', 'wingme.authentication', 'wingme.controllers', 'wingme.services']);
+var app = angular.module('wingme', ['ionic', 'wingme.config', 'wingme.authentication', 'wingme.controllers', 'wingme.services']);
 
 app.run(run);
-app.config(config);
+app.config(routes);
 
 // register dependencies
+angular.module('wingme.config', []);
 angular.module('wingme.authentication', []);
 angular.module('wingme.controllers', []);
 angular.module('wingme.services', []);
@@ -29,12 +30,8 @@ function run($ionicPlatform) {
   });
 }
 
-function config($stateProvider, $urlRouterProvider) {
+function routes($stateProvider, $urlRouterProvider) {
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
   $stateProvider
 
   // setup an abstract state for the tabs directive
@@ -45,7 +42,6 @@ function config($stateProvider, $urlRouterProvider) {
   })
 
   // Each tab has its own nav history stack:
-
   .state('tab.addWing', {
     url: '/addWing',
     views: {
