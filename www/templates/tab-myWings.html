@@ -1,10 +1,18 @@
 <ion-view view-title="My Wings">
   <ion-content>
     <ion-list>
+      <ion-radio ng-model="choice" ng-value="'A'" ng-checked="true">Choose A</ion-radio>
+      <ion-radio ng-model="choice" ng-value="'B'">Choose B</ion-radio>
+    </ion-list>
+
+    <div class="item item-divider">
+      Wing Requests
+    </div>
+
+    <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="(index, wing) in myWings.wings" type="item-text-wrap">
         <img ng-src="./img/ben.png">
         <h2>{{wing.username}}</h2>
-        <p>hihi</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
         <ion-option-button class="button-positive" ng-click="myWings.updateWing(wing.username, index, true)">
