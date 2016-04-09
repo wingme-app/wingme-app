@@ -23,7 +23,7 @@ function auth($http, $state) {
 
     var request = {
       method: 'POST',
-      url: '/api/login'
+      url: '/api/login',
       data: {
         username: username,
         password: password
@@ -78,7 +78,7 @@ function auth($http, $state) {
   }
 
   // parse the token (decode) for later use
-  function parseJwt = function(token) {
+  function parseJwt(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace('-', '+').replace('_', '/');
     return JSON.parse($window.atob(base64));
