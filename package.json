@@ -14,6 +14,7 @@
     "gulp-minify-css": "^0.3.0",
     "gulp-rename": "^1.2.0",
     "gulp-sass": "^2.0.4",
+    "jsonwebtoken": "^5.7.0",
     "knex": "^0.10.0"
   },
   "devDependencies": {
