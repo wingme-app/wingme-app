@@ -27,15 +27,18 @@ function run($ionicPlatform, $rootScope, $state, Auth) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    // default view to tab.addWing
+    // if user has no token, it will go to login.
+    $state.go('tab.addWing');
   });
 
   // on state changes, we check for authentication!
-  $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
-    console.log('state change');
+  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
     if (toState.authenticate && !Auth.isAuthed()) {
       // User isn’t authenticated
-      $state.go("signup");
       event.preventDefault(); 
+      $state.go('login');
     }
   });
 
@@ -99,7 +102,7 @@ function routes($stateProvider, $urlRouterProvider) {
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/tab/addWing');
 
 }
 

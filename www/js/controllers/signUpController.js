@@ -8,15 +8,12 @@ module.controller('SignUpCtrl', function(Wings, Auth, $state) {
     Auth.signup(username, password)
       .then(function(resp) {
         if (resp.data.success) {
-          console.log(resp);
           $state.go('tab.addWing');
         } else {
           console.error(resp.data.message);
         }
       });
   }
-
-
 });
 
 })();
