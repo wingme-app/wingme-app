@@ -242,7 +242,88 @@ app.get('/api/duos/', function(req, res) {
   res.send({results: results});
  });
 
+/** ---------------------------------------------
+ *  Authentication
+ *  --------------
+ *
+ *  For the sake of this dummy authentication api, the users variable below is our mock database.  
+ *  
+ */
+var users = {};
 
+// sign up handler
+app.post('/api/signup', function(req, res) {
+  var user = req.body.username;
+  var pass = req.body.password;
+
+  // if user and password are not BOTH filled out
+  if (!user && !pass) {
+    res.json({
+      success: false,
+      message: 'Please provide both a username and password.'
+    });
+
+  } else {
+
+    // if user already exists
+    if (user in users) {
+      res.json({
+        success: false,
+        message: user + ' already exists in our database!'
+      });
+
+    // if all checks out, store user and pass in users
+    // NOTE: We would never store the password in plain text like this.
+    // We should be using something like bcrypt with a salt to hash it.
+    } else {
+      users[user] = pass;
+      res.json({
+        success: true,
+        message: 'Username: ' + user + ' was created!'
+      });
+    }
+  }
+
+
+});
+
+// sign in handler
+app.post('/api/signin', function(req, res) {
+  var user = req.body.username;
+  var pass = req.body.password;
+
+  // if user does not exist
+  if (!users[user]) {
+    res.json({
+      success: false,
+      message: 'Authentication failed. User not found.'
+    });
+
+  // if user exists
+  } else {
+
+    // but password is wrong
+    if (users[user] !== pass) {
+      res.json({
+        success: false,
+        message: 'Authentication failed. Password is incorrect.'
+      });
+
+    // if all checks out
+    } else {
+      var token = jwt.sign(user, tokenSecret, {
+        expiresIn: 47700
+      });
+
+      res.json({
+        success: true,
+        message: 'Enjoy your token!',
+        token: token
+      });
+    }
+
+  }
+});
 
 
 var port = 8000;

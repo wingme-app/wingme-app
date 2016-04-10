@@ -4,6 +4,7 @@
   "description": "myApp: An Ionic project",
   "main": "server.js",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.0",
     "bookshelf": "^0.9.4",
     "cors": "^2.7.1",
