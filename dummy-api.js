@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var cors = require('cors')
+var jwt = require('jsonwebtoken');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -249,7 +250,8 @@ app.get('/api/duos/', function(req, res) {
  *  For the sake of this dummy authentication api, the users variable below is our mock database.  
  *  
  */
-var users = {};
+var authedUsers = {};
+var tokenSecret = 'CouchBaseRocks';
 
 // sign up handler
 app.post('/api/signup', function(req, res) {
@@ -266,52 +268,19 @@ app.post('/api/signup', function(req, res) {
   } else {
 
     // if user already exists
-    if (user in users) {
+    if (user in authedUsers) {
       res.json({
         success: false,
         message: user + ' already exists in our database!'
       });
 
-    // if all checks out, store user and pass in users
+    // if all checks out, store user and pass in authedUsers
     // NOTE: We would never store the password in plain text like this.
     // We should be using something like bcrypt with a salt to hash it.
     } else {
-      users[user] = pass;
-      res.json({
-        success: true,
-        message: 'Username: ' + user + ' was created!'
-      });
-    }
-  }
-
-
-});
-
-// sign in handler
-app.post('/api/signin', function(req, res) {
-  var user = req.body.username;
-  var pass = req.body.password;
-
-  // if user does not exist
-  if (!users[user]) {
-    res.json({
-      success: false,
-      message: 'Authentication failed. User not found.'
-    });
-
-  // if user exists
-  } else {
-
-    // but password is wrong
-    if (users[user] !== pass) {
-      res.json({
-        success: false,
-        message: 'Authentication failed. Password is incorrect.'
-      });
-
-    // if all checks out
-    } else {
-      var token = jwt.sign(user, tokenSecret, {
+      authedUsers[user] = pass;
+      
+      var token = jwt.sign({username: user}, tokenSecret, {
         expiresIn: 47700
       });
 
@@ -321,9 +290,45 @@ app.post('/api/signin', function(req, res) {
         token: token
       });
     }
-
   }
 });
+
+// sign in handler
+app.post('/api/login', function(req, res) {
+  var user = req.body.username;
+  var pass = req.body.password;
+
+  // if user does not exist
+  if (!authedUsers[user]) {
+    res.json({
+      success: false,
+      message: 'Authentication failed. User not found.'
+    });
+
+  // if user exists
+  } else {
+
+    // but password is wrong
+    if (authedUsers[user] !== pass) {
+      res.json({
+        success: false,
+        message: 'Authentication failed. Password is incorrect.'
+      });
+
+    // if all checks out
+    } else {
+      var token = jwt.sign({username: user}, tokenSecret, {
+        expiresIn: 47700
+      });
+
+      res.json({
+        success: true,
+        message: 'Enjoy your token!',
+        token: token
+      });
+    }
+  }
+}); // end authentication
 
 
 var port = 8000;

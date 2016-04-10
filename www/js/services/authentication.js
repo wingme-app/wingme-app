@@ -6,9 +6,10 @@ module.factory('Auth', auth);
 
 // --------------------------------------
 
-function auth($http, $state) {
+function auth($http, $window, $state) {
 
   return {
+    signup: signup,
     login: login,
     logout: logout,
     isAuthed: isAuthed
@@ -16,36 +17,59 @@ function auth($http, $state) {
 
   // ------------
 
-  function login(username, password) {
-    // debugging
-    console.log('username submitted = ', username);
-    console.log('password submitted = ', password);
-
+  function signup(username, password) {
     var request = {
       method: 'POST',
-      url: '/api/login',
+      url: 'http://localhost:8000/api/signup',
       data: {
         username: username,
         password: password
       }
     };
 
-    $http(request)
+    // we return a promise here so that the controller retains async control.
+    return $http(request)
       .then(success, error);
 
     // we can expect an encoded token string from our server.
     function success(resp) {
-      saveToken(resp);
+      saveToken(resp.data.token);
+      return resp;
     }
 
     function error(err) {
-      console.error(err);
+      return console.error(err);
+    }
+  }
+
+  function login(username, password) {
+    var request = {
+      method: 'POST',
+      url: 'http://localhost:8000/api/login',
+      data: {
+        username: username,
+        password: password
+      }
+    };
+
+    return $http(request)
+      .then(success, error);
+
+    // we can expect an encoded token string from our server.
+    function success(resp) {
+      saveToken(resp.data.token);
+      return resp;
+    }
+
+    function error(err) {
+      return console.error(err);
     }
   }
 
   // to logout, we remove the jwtToken from localStorage
   function logout() {
     $window.localStorage.removeItem('jwtToken');
+    delete $window.localStorage['jwtToken'];
   }
 
   // save the token to local storage for persistency
@@ -63,6 +87,7 @@ function auth($http, $state) {
       var params = parseJwt(token);
       return Math.round(new Date().getTime() / 1000) <= params.exp;
     } else {
+      console.error('no token found!');
       return false;
     }
   }
