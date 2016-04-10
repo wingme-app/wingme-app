@@ -6,7 +6,7 @@ module.factory('Auth', auth);
 
 // --------------------------------------
 
-function auth($http, $window, $state) {
+function auth($http, $window, $state, $rootScope) {
 
   return {
     signup: signup,
@@ -70,6 +70,7 @@ function auth($http, $window, $state) {
   function logout() {
     $window.localStorage.removeItem('jwtToken');
     delete $window.localStorage['jwtToken'];
+    $rootScope.$broadcast('loggedOut');
   }
 
   // save the token to local storage for persistency
