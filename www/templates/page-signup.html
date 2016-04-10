@@ -16,6 +16,13 @@
       </label> -->
     </div>
 
+    <div ng-if="signup.error" class="row assertive">
+      <div class="col text-center">
+        <p></p>
+        <p>{{signup.message}}</p>
+      </div>
+    </div>
+
     <button ng-click="signup.signup(signup.username, signup.password)" class="button button-block button-positive">
       Create Account
     </button>

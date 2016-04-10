@@ -33,7 +33,9 @@ function auth($http, $window, $state, $rootScope) {
 
     // we can expect an encoded token string from our server.
     function success(resp) {
-      saveToken(resp.data.token);
+      if (resp.data.token) {
+        saveToken(resp.data.token);
+      }
       return resp;
     }
 
@@ -57,7 +59,9 @@ function auth($http, $window, $state, $rootScope) {
 
     // we can expect an encoded token string from our server.
     function success(resp) {
-      saveToken(resp.data.token);
+      if (resp.data.token) {
+        saveToken(resp.data.token);
+      }
       return resp;
     }
 
