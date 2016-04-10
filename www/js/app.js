@@ -14,7 +14,7 @@ angular.module('wingme.services', []);
 // --------------------------------------
 // --------------------------------------
 
-function run($ionicPlatform, $rootScope, Auth) {
+function run($ionicPlatform, $rootScope, $state, Auth) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -29,6 +29,16 @@ function run($ionicPlatform, $rootScope, Auth) {
     }
   });
 
+  // on state changes, we check for authentication!
+  $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
+    console.log('state change');
+    if (toState.authenticate && !Auth.isAuthed()) {
+      // User isn’t authenticated
+      $state.go("signup");
+      event.preventDefault(); 
+    }
+  });
+
 }
 
 function routes($stateProvider, $urlRouterProvider) {
@@ -38,7 +48,13 @@ function routes($stateProvider, $urlRouterProvider) {
   .state('signup', {
     url: '/signup',
     templateUrl: 'templates/page-signup.html',
-    controller: 'SignUpCtrl'
+    controller: 'SignUpCtrl as signup'
+  })
+
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/page-login.html',
+    controller: 'LoginCtrl as login'
   })
 
   // setup an abstract state for the tabs directive
@@ -51,6 +67,7 @@ function routes($stateProvider, $urlRouterProvider) {
   // Each tab has its own nav history stack:
   .state('tab.addWing', {
     url: '/addWing',
+    authenticate: true,
     views: {
       'tab-addWing': {
         templateUrl: 'templates/tab-addWing.html',
@@ -61,6 +78,7 @@ function routes($stateProvider, $urlRouterProvider) {
 
   .state('tab.myWings', { // my wings
       url: '/myWings',
+      authenticate: true,
       views: {
         'tab-myWings': {
           templateUrl: 'templates/tab-myWings.html',
@@ -71,6 +89,7 @@ function routes($stateProvider, $urlRouterProvider) {
 
   .state('tab.findMatch', {
     url: '/findMatch',
+    authenticate: true,
     views: {
       'tab-findMatch': {
         templateUrl: 'templates/tab-findMatch.html',
@@ -79,21 +98,8 @@ function routes($stateProvider, $urlRouterProvider) {
     }
   });
 
-
-
-  // .state('tab.findMatch', {
-  //   url: '/findMatch',
-  //   views: {
-  //     'tab-account': {
-  //       templateUrl: 'templates/tab-findMatch.html',
-  //       controller: 'FidMatchCtrl as findMatch'
-  //     }
-  //   }
-  // });
-
   // if none of the above states are matched, use this as the fallback
-  // EDIT THIS
-  $urlRouterProvider.otherwise('/tab/addWing');
+  $urlRouterProvider.otherwise('/login');
 
 }
 
