@@ -77,7 +77,7 @@ function auth($http, $state) {
     return token;
   }
 
-  // parse the token (decode) for later use
+  // parse the token (decode) to detect the expiration. (used in isAuthed())
   function parseJwt(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace('-', '+').replace('_', '/');
