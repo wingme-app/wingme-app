@@ -99,6 +99,17 @@ function routes($stateProvider, $urlRouterProvider) {
         controller: 'FindMatchCtrl as findMatch'
       }
     }
+  })
+
+  .state('tab.myMatches', {
+    url: '/myMatches',
+    authenticate: true,
+    views: {
+      'tab-myMatches': {
+        templateUrl: 'templates/tab-myMatches.html',
+        controller: 'MyMatchesCtrl as myMatches'
+      }
+    }
   });
 
   // if none of the above states are matched, use this as the fallback
