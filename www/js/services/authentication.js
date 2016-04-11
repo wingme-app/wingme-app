@@ -6,7 +6,7 @@ module.factory('Auth', auth);
 
 // --------------------------------------
 
-function auth($http, $window, $state, $rootScope) {
+function auth($http, $window, $state, $rootScope, Config) {
 
   return {
     signup: signup,
@@ -20,7 +20,7 @@ function auth($http, $window, $state, $rootScope) {
   function signup(username, password) {
     var request = {
       method: 'POST',
-      url: 'http://localhost:8000/api/signup',
+      url: Config.dev.api + '/signup',
       data: {
         username: username,
         password: password
@@ -47,7 +47,7 @@ function auth($http, $window, $state, $rootScope) {
   function login(username, password) {
     var request = {
       method: 'POST',
-      url: 'http://localhost:8000/api/login',
+      url: Config.dev.api + '/login',
       data: {
         username: username,
         password: password

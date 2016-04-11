@@ -12,7 +12,7 @@ function config() {
   };
 
   var deploy = {
-
+    // deployment environment variables go here
   };
 
   var env = {

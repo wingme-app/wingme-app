@@ -6,7 +6,7 @@ module.factory('Wings', wings);
 
 // --------------------------------------
 
-function wings($http, $state) {
+function wings($http, $state, Config) {
 
   var currentWings = [];
 
@@ -22,7 +22,7 @@ function wings($http, $state) {
 
     var request = {
       method: 'GET',
-      url: 'http://localhost:8000/api/wings/requests'
+      url: Config.dev.api + '/wings/requests'
     }
 
     $http(request)
@@ -52,7 +52,7 @@ function wings($http, $state) {
 
     var request = {
       method: 'POST',
-      url: 'http://localhost:8000/api/wings/requests',
+      url: Config.dev.api + '/wings/requests',
       data: {
         "wing" : username,
         "accepted" : status
@@ -78,7 +78,7 @@ function wings($http, $state) {
 
     var request = {
       method: 'POST',
-      url: 'http://localhost:8000/api/wings/add',
+      url: Config.dev.api + '/wings/add',
       data: {
         wingToAdd: username
       }
