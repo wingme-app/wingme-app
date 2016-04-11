@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var auth = require('../modules/auth');
 
 // we'll want to load the database module (knex) to make queries
 var knex = require('../db');
+
 
 /**
  *  router/signup.js
@@ -11,9 +13,10 @@ var knex = require('../db');
  */
 router.post('/', function(req, res) {
   var user = req.body;
+  console.log(req.body);
 
   /**
-   *  You'll notice that we use res.json({}) to send responses to our client,
+   *  You'll notice that we use res.json({}) to send responses to our client
    *  regardless of whether the operation succeeded or not. This is because
    *  error codes are not as helpful, but a json object with a description
    *  of what occured 
@@ -30,16 +33,23 @@ router.post('/', function(req, res) {
   // if data validation passes, insert user object into database
   } else {
     knex('users').insert(user)
-      .then(function() {
+      .then(function(ID) {
+        user.ID = ID[0];
+
         res.json({
           success: true,
-          message: 'User inserted into database'
+          message: 'User inserted into database. Enjoy your token!',
+          token: auth.genToken(user)
         });
       }, function(err) {
-        console.error(err);
+        var message = err.code;
+        
+        if (err.errno === 19) {
+          message = 'username already exists!'
+        }
         res.json({
           success: false,
-          message: err
+          message: message
         });
       });
   }
@@ -47,6 +57,7 @@ router.post('/', function(req, res) {
 
 // helper functions
 function validate(user) {
+  console.log(user);
   return user.username && user.firstname && user.lastname && user.email && user.password;
 }
 

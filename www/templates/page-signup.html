@@ -6,6 +6,15 @@
         <input ng-model="signup.username" type="text" placeholder="Username">
       </label>
       <label class="item item-input item-floating-label">
+        <input ng-model="signup.email" type="email" placeholder="Email">
+      </label>
+      <label class="item item-input item-floating-label">
+        <input ng-model="signup.firstname" type="text" placeholder="First Name">
+      </label>
+      <label class="item item-input item-floating-label">
+        <input ng-model="signup.lastname" type="text" placeholder="Last Name">
+      </label>
+      <label class="item item-input item-floating-label">
         <input ng-model="signup.password" type="password" placeholder="Password">
       </label>
       <!-- <label class="item item-input item-floating-label">
@@ -21,7 +30,13 @@
       </div>
     </div>
 
-    <button ng-click="signup.signup(signup.username, signup.password)" class="button button-block button-positive">
+    <button ng-click="signup.signup(
+      signup.username,
+      signup.email,
+      signup.firstname,
+      signup.lastname,
+      signup.password
+      )" class="button button-block button-positive">
       Create Account
     </button>
 

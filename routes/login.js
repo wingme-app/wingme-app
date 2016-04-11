@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var auth = require('../modules/auth');
 
 // we'll want to load the database module (knex) to make queries
 var knex = require('../db');
@@ -25,17 +26,17 @@ router.post('/', function(req, res) {
       .then(function(resp) {
         var userFromDb = resp[0];
 
-        // if 
         if (userFromDb && userFromDb.password === user.password) {
           res.json({
             success: true,
-            message: 'Logged in!'
-          })
+            message: 'Logged in!',
+            token: auth.genToken(userFromDb)
+          });
         } else {
           res.json({
             success: false,
             message: 'Username or password is incorrect.'
-          })
+          });
         }
       });
   }

@@ -17,14 +17,12 @@ function auth($http, $window, $state, $rootScope, Config) {
 
   // ------------
 
-  function signup(username, password) {
+  function signup(userObj) {
+    console.log(userObj);
     var request = {
       method: 'POST',
       url: Config.dev.api + '/signup',
-      data: {
-        username: username,
-        password: password
-      }
+      data: userObj
     };
 
     // we return a promise here so that the controller retains async control.
