@@ -9,8 +9,16 @@ module.controller('SignUpCtrl', function(Auth, $state, $rootScope) {
   vm.error = false;
   vm.message;
 
-  vm.signup = function(username, password) {
-    Auth.signup(username, password)
+  vm.signup = function(username, email, firstname, lastname, password) {
+    var userObj = {
+      username: username,
+      email: email,
+      firstname: firstname,
+      lastname: lastname,
+      password: password
+    }
+
+    Auth.signup(userObj)
       .then(function(resp) {
         if (resp.data.success) {
           $state.go('tab.addWing');
