@@ -2,11 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 // we'll want to load the database module (knex) to make queries
-var knex = require('../dummy-server-db');
+var knex = require('../db');
 
 /**
  *  router/signup.js
  *
+ *  API endpint: /api/signup
  */
 router.post('/', function(req, res) {
   var user = req.body;
@@ -19,14 +20,15 @@ router.post('/', function(req, res) {
    *
    */
 
-  // validation
+  // data validation
   if (!validate(user)) {
     res.json({
       success: false,
       message: 'User information validation failed.'
     });
+
+  // if data validation passes, insert user object into database
   } else {
-    // if validation passes, insert user object into database
     knex('users').insert(user)
       .then(function() {
         res.json({
