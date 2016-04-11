@@ -37,6 +37,18 @@ users.push({
 }, {
   userID: 6,
   username: 'Tiffany'
+}, {
+  userID: 7,
+  username: 'Danny'
+}, {
+  userID: 8,
+  username: 'Chris'
+}, {
+  userID: 9,
+  username: 'Phil'
+}, {
+  userID: 10,
+  username: 'Joseph'
 });
 
 var duos = [];
@@ -104,10 +116,21 @@ app.post('/api/wings/add', function(req, res) {
   console.log('=============');
   console.log(req.method + ' received: ' + req.url);
 
+  var bool = true;
+
   var results = users.slice().filter(function(user) {
     // some kind of filtering will occur here.
     return user.userID !== 1;
   });
+
+  results = results.map(function(user) {
+    user.isWing = bool;
+    user.currentWing = false;
+    bool = !bool;
+    return user;
+  });
+
+  results[2].currentWing = true;
 
   console.log('SUCCESS');
   res.send({potentialWings: results});

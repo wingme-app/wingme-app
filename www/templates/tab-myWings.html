@@ -1,8 +1,9 @@
 <ion-view view-title="My Wings">
   <ion-content>
     <ion-list>
-      <ion-radio ng-model="choice" ng-value="'A'" ng-checked="true">Choose A</ion-radio>
-      <ion-radio ng-model="choice" ng-value="'B'">Choose B</ion-radio>
+      <ion-radio ng-repeat="wing in myWings.wings" ng-model="myWings.currentWing" ng-value="wing.username">
+        {{wing.username}}
+      </ion-radio>
     </ion-list>
 
     <div class="item item-divider">
@@ -10,7 +11,7 @@
     </div>
 
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="(index, wing) in myWings.wings" type="item-text-wrap">
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="(index, wing) in myWings.wingRequests" type="item-text-wrap">
         <img ng-src="./img/ben.png">
         <h2>{{wing.username}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
@@ -23,5 +24,6 @@
         </ion-option-button>
       </ion-item>
     </ion-list>
+    
   </ion-content>
 </ion-view>
