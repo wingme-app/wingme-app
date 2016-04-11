@@ -14,6 +14,7 @@ function matches($http, $state) {
   return {
     getMatches: getMatches,// get all possible matches
     viewPotentialMatch: viewPotentialMatch,
+    confirmMatch: confirmMatch
   };
 
   // ------------
@@ -49,6 +50,25 @@ function matches($http, $state) {
 
   function viewPotentialMatch(array){
     array.shift();
+  }
+
+  function confirmMatch(matchObj){
+    console.log('Match Accepted, this is the matchObj', matchObj);
+    var request = {
+      method: 'POST',
+      url: 'http://localhost:8000/api/duos/find',
+      data: matchObj
+    };
+    
+    return $http(request)
+      .then(success, error);
+
+    function success(response){
+      console.log('this is the response line 67 sucess, ', response);
+    }
+    function error(response){
+      console.log('this is the response line 70 error, ', response);
+    }
   }
 
   // function getRandomInt(min, max){

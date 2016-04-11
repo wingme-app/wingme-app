@@ -213,12 +213,12 @@ app.post('/api/duos/find', function(req, res) {
   console.log('=============');
   console.log(req.method + ' received: ' + req.url);
 
-  if ("currentDuoID" in req.body &&
-      "targetDuoID" in req.body &&
-      "accepted" in req.body &&
-      typeof req.body.currentDuoID === "number" &&
-      typeof req.body.targetDuoID === "number" &&
-      typeof req.body.accepted === "boolean"
+  if ("duoID" in req.body &&
+      // "targetDuoID" in req.body &&
+      // "accepted" in req.body &&
+      typeof req.body.duoID === "number" //&&
+      // typeof req.body.targetDuoID === "number" &&
+      // typeof req.body.accepted === "boolean"
     ) {
     console.log('SUCCESS');
     res.send();
