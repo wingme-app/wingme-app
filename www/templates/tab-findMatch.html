@@ -1,5 +1,12 @@
 <ion-view view-title="Find Match">
   <ion-content>
-  	<img ng-src="{{findMatch.potentialMatches[0].imageURL}}">
+  	<!-- potential match image -->
+  	<div ng-show="findMatch.displayImg">
+  		<img class="potential-match" ng-src="{{findMatch.potentialMatches[0].imageURL}}">
+  	</div>
+	<!-- reject match button -->
+  	<button class="button button-energized" ng-click="findMatch.nextMatch()">Reject</button>
+  	<!-- accept match button -->
+  	<button class="button button-positive">Accept</button>
   </ion-content>
 </ion-view>

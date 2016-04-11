@@ -45,11 +45,10 @@ function matches($http, $state) {
       // TODO: error handling 
       console.log('error in getMatches ', response );
     }
-
-  }
+  } //end of getMatches() function
 
   function viewPotentialMatch(array){
-    return array.pop();
+    array.shift();
   }
 
   // function getRandomInt(min, max){
