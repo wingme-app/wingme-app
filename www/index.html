@@ -26,6 +26,8 @@
     <script src="js/controllers/myWingsController.js"></script>
     <script src="js/controllers/addWingController.js"></script>
     <script src="js/controllers/signUpController.js"></script>
+    <script src="js/controllers/loginController.js"></script>
+    <script src="js/controllers/navController.js"></script>
     <!-- Services -->
     <script src="js/services/authentication.js"></script>
     <script src="js/services/wings.js"></script>
@@ -36,9 +38,12 @@
     <!--
       The nav bar that will be updated as we navigate between views.
     -->
-    <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
+    <ion-nav-bar class="bar-stable" ng-controller="NavCtrl as nav">
+      <ion-nav-buttons side="secondary">
+        <button ng-if="nav.authed" class="button button-dark" ng-click="nav.logout()">
+          Logout
+        </button>
+      </ion-nav-buttons>
     </ion-nav-bar>
     <!--
       The views will be rendered in the <ion-nav-view> directive below

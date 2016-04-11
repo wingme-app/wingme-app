@@ -1,22 +1,27 @@
 <ion-view view-title="Sign Up">
   <ion-content class="padding">
 
-    <div class="list">
+    <div class="list list-inset">
       <label class="item item-input item-floating-label">
-        <span class="input-label">First Name</span>
-        <input type="text" placeholder="First Name">
+        <input ng-model="signup.username" type="text" placeholder="Username">
       </label>
       <label class="item item-input item-floating-label">
-        <span class="input-label">Last Name</span>
-        <input type="text" placeholder="Last Name">
+        <input ng-model="signup.password" type="password" placeholder="Password">
       </label>
-      <label class="item item-input item-floating-label">
+      <!-- <label class="item item-input item-floating-label">
         <span class="input-label">Email</span>
         <input type="text" placeholder="Email">
-      </label>
+      </label> -->
     </div>
 
-    <button class="button button-block button-positive">
+    <div ng-if="signup.error" class="row assertive">
+      <div class="col text-center">
+        <p></p>
+        <p>{{signup.message}}</p>
+      </div>
+    </div>
+
+    <button ng-click="signup.signup(signup.username, signup.password)" class="button button-block button-positive">
       Create Account
     </button>
 
