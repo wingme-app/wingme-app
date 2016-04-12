@@ -12,7 +12,8 @@ function auth($http, $window, $state, $rootScope, Config) {
     signup: signup,
     login: login,
     logout: logout,
-    isAuthed: isAuthed
+    isAuthed: isAuthed,
+    attachToken: attachToken
   }
 
   // ------------

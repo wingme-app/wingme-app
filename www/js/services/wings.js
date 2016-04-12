@@ -6,7 +6,7 @@ module.factory('Wings', wings);
 
 // --------------------------------------
 
-function wings($http, $state, Config) {
+function wings($http, $state, Config, Auth) {
 
   var currentWings = [];
 
@@ -25,7 +25,7 @@ function wings($http, $state, Config) {
       url: Config.dev.api + '/wings/requests'
     }
 
-    return $http(request)
+    return $http(Auth.attachToken(request))
       .then(success, error)
 
     // -----------------
@@ -61,7 +61,7 @@ function wings($http, $state, Config) {
       }
     };
 
-    $http(request)
+    $http(Auth.attachToken(request))
       .then(success, error);
 
     // -----------------
@@ -86,7 +86,7 @@ function wings($http, $state, Config) {
       }
     };
 
-    $http(request)
+    $http(Auth.attachToken(request))
      .then(success, error);
 
     // -----------------
