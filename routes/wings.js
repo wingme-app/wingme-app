@@ -33,9 +33,9 @@ router.post('/add', function(req, res) {
       res.send({
         success: false,
         message: 'User does not exist; no wing added.'
-      })
-    } 
-      
+        })
+        }
+     }).then( 
       knex('duos')
       .where('uID1', req.body.clientID)
       .orWhere('uID2', req.body.clientID)
@@ -44,6 +44,7 @@ router.post('/add', function(req, res) {
           console.log('clientDuoArr is',ID);
           return ID;
         })
+      )
           // knex('duos')
           // .whereIn('ID',clientDuoArr)
            //.where('uID1', wingid)
@@ -72,7 +73,7 @@ router.post('/add', function(req, res) {
    // })
 
 
-})
+
 })
 
 // .then(function(wingid){
