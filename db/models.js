@@ -3,7 +3,7 @@ var bookshelf = require('../lib/db.js').bookshelf;
 var Users = bookshelf.Model.extend({
   tableName: 'users',
   duos: function() {
-	return this.hasMany(Duos);
+	  return this.hasMany(Duos);
   }
 });
    
@@ -13,13 +13,13 @@ var Duos = bookshelf.Model.extend({
     return this.belongsTo(Users);
   },
   pairs: function() {
-	return this.hasMany(Pairs);
+	  return this.hasMany(Pairs);
   }
 });
 
 var Pairs = bookshelf.Model.extend({
   tableName: 'pairs',
   duos: function() {
-	 return this.belongsTo(Duos);
-   }
+	  return this.belongsTo(Duos);
+  }
 });
