@@ -1,20 +1,14 @@
 var express = require('express');
 var router = express.Router();
 // var auth = require('../modules/auth');
-
 // we'll want to load the database module (knex) to make queries
 var knex = require('../db/config.js').knex;
-
-// router.post('/hello', function(req, res) {
-//   console.log("hiii", req.body);
-//   res.send("hi");
-// });
 /**
- *  router/signup.js
+ *  router/wings.js
  *
- *  API endpint: /api/signup
+ *  API endpint: /api/wings
  */
-
+var wingid;
 router.post('/add', function(req, res) {
   console.log("hi", req.body);
   // var tokenObj = auth.decode(req.headers['x-access-token']);
@@ -23,101 +17,66 @@ router.post('/add', function(req, res) {
 
   knex('users')
    .where('username', req.body.wingToAdd)
-     .select('ID')
-   .then(function(ID) {
-     console.log('wingID retrieved from users table is', ID);
-     return ID;
-   })
-   .then(function(wingid){
-    if (wingid.length===0) {
-      res.send({
-        success: false,
-        message: 'User does not exist; no wing added.'
-        })
-        }
-     }).then( 
-      knex('duos')
-      .where('uID1', req.body.clientID)
-      .orWhere('uID2', req.body.clientID)
       .select('ID')
-      .then(function(ID) {
-          console.log('clientDuoArr is',ID);
-          return ID;
+   .then(function(ID) {
+      console.log('wingID retrieved from users table is', ID);
+      wingid=ID;
+
+     return wingid.forEach(function(currentId){
+      console.log("line 33 the currentwingid is ", currentId);
+        if(!currentId){
+          res.send({
+            success: false,
+            message: 'User does not exist; no wing added.'
+          })
+        }
+      });
+   })
+   .then(function() {
+      console.log('line 36: wingid is ', wingid);
+      knex('duos')
+        .where('uID1', req.body.clientID)  
+        .andWhere('uID2', wingid[0].ID)
+        .select('ID')
+        .select('status')
+        .then(function(status){
+          console.log('the Status is',status);
+          return status.forEach(function(currentEl){
+             if(currentEl.status === 'pending'){ 
+                res.send({
+                  success: true,
+                  message: 'Your wing is added!'
+                })
+              }
+              else if(currentEl.status === 'ok'){
+                res.send({
+                  success: false,
+                  message: 'You are already wings!'
+                })
+              }
+              else if(currentEl.status === 'null') {
+                //use knex query to update status
+                res.send({
+                 success: true,
+                 message: 'Status is now pending!'
+              })
+             }
+          });
         })
-      )
-          // knex('duos')
-          // .whereIn('ID',clientDuoArr)
-           //.where('uID1', wingid)
-    //         .orWhere('uID2', wingid)
-    //          .select('ID', 'status')
-    //           if( 'status' ===false){
-                
-    //             res.send({
-    //               status:true,
-    //               message:'Your wing is added!'
-    //               })
-    //           }
-    //           else if('status'===true){
-
-    //             res.send({
-    //               message: 'You are already wings!'
-    //               })
-    //           }
-    //          })
-    // // }
-       
-  
-    //   })
-   //  .catch(function(err) {
-   //   console.log('Error is', err);
-   // })
+   })
+    .catch(function(err) {
+     console.log('Error is', err);
+   })
+ })
 
 
 
-})
 
-// .then(function(wingid){
-//     if (!wingid) {
-//       wingid.JSON({
-//         success: false,
-//         message: 'User does not exist; no wing added.'
-//       })
-//     } else {
-//       // resp should be the ID of the wingtoAdd username
-//       // if so, set user.wingToAdd to resp ?
-//       // eg. wingToAdd: 3
-//       knex('duos')
-//       // changed resp to clientID
-//       .whereIn('uID1', clientID)
-//        .orWhereIn('uID2', clientID)
-//         .select('ID')
-//         .then(function(clientDuoArr) {
-//           knex('duos')
-//           // .whereIn('ID',clientDuoArr)
-//            .where('uID1',wingid )
-//             .orWhere('uID2',wingid)
-//              .select('ID',status)
-//               if(status===false){
-                
-//                 res.JSON({
-//                   status:true,
-//                   message:'Your wing is added!'
-//                   })
-//               }
-//               else if(status===true){
-
-//                 res.JSON({
-//                   message: 'You are already wings!'
-//                   })
-//               }
-//              })
-//         }
-       
-  
-//       })
+// Get request route
+router.post('/requests', function(req, res) {
 
 
-
+});
   /**
    *  You'll notice that we use res.json({}) to send responses to our client
    *  regardless of whether the operation succeeded or not. This is because
