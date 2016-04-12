@@ -19,7 +19,6 @@ module.controller('FindMatchCtrl', function(Matches) { //as findMatch
 	// fired when REJECT button clicked
 	vm.nextMatch = function() {
 		if (vm.potentialMatches.length === 1){
-			console.log('length of matches is: ', vm.potentialMatches.length)
 			vm.potentialMatches.shift();
 			vm.potentialMatches.push({imageURL: 'http://www.gimmesomeoven.com/wp-content/uploads/life/2013/10/Picky-576x576.jpg'});
 		}
