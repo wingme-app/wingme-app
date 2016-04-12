@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var cors = require('cors')
 var jwt = require('jsonwebtoken');
+var auth = require('./modules/auth');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -74,7 +75,7 @@ duos.push({
  *  Add Wing
  *
  */
-app.post('/api/wings/add', function(req, res) {
+app.post('/api/wings/add', auth.ifAuthorized, function(req, res) {
   /**
    *  This is for a post request coming to /api/wings/add
    *  To be used on the addwing tab
@@ -103,7 +104,7 @@ app.post('/api/wings/add', function(req, res) {
  *  Wing Requests
  *
  */
- app.get('/api/wings/requests', function(req, res) {
+ app.get('/api/wings/requests', auth.ifAuthorized, function(req, res) {
    /**
     *  This is for a GET request coming to /api/wings/requests
     *  To be used on the wing requests tab to retrieve a list of wing requests (potential wings)
@@ -136,7 +137,7 @@ app.post('/api/wings/add', function(req, res) {
   res.send({potentialWings: results});
  });
 
-app.post('/api/wings/requests', function(req, res) {
+app.post('/api/wings/requests', auth.ifAuthorized, function(req, res) {
   /**
    *  This is for a POST request coming to /api/wings/requests
    *  To be used on the wing requests tab
@@ -173,7 +174,7 @@ app.post('/api/wings/requests', function(req, res) {
  *  Find Duo
  *
  */
- app.get('/api/duos/find', function(req, res) {
+ app.get('/api/duos/find', auth.ifAuthorized, function(req, res) {
    /**
     *  This is for a GET request coming to /api/duos/find
     *  To be used on the find duo page to retrieve a list of potential duos
@@ -195,7 +196,7 @@ app.post('/api/wings/requests', function(req, res) {
   res.send({results: results});
  });
 
-app.post('/api/duos/find', function(req, res) {
+app.post('/api/duos/find', auth.ifAuthorized, function(req, res) {
   /**
    *  This is for a POST request coming to /api/duos/find
    *  To be used on the find duo page to accept/deny another duo as a "pair" (of duos)
@@ -236,7 +237,7 @@ app.post('/api/duos/find', function(req, res) {
  *  Pending Duos
  *
  */
-app.get('/api/duos/', function(req, res) {
+app.get('/api/duos/', auth.ifAuthorized, function(req, res) {
   /**
    *  This is for a GET request coming to /api/duos/
    *  To be used on the 'my duos' page to retrieve a list of pending/accepted/denied wings.
@@ -280,6 +281,11 @@ var tokenSecret = 'CouchBaseRocks';
 app.post('/api/signup', function(req, res) {
   var user = req.body.username;
   var pass = req.body.password;
+  var userObj = {
+    username: user,
+    ID: Object.keys(req.body).length
+  }
+
 
   // if user and password are not BOTH filled out
   if (!user && !pass) {
@@ -303,9 +309,7 @@ app.post('/api/signup', function(req, res) {
     } else {
       authedUsers[user] = pass;
       
-      var token = jwt.sign({username: user}, tokenSecret, {
-        expiresIn: 47700
-      });
+      var token = auth.genToken(userObj);
 
       res.json({
         success: true,
@@ -320,6 +324,10 @@ app.post('/api/signup', function(req, res) {
 app.post('/api/login', function(req, res) {
   var user = req.body.username;
   var pass = req.body.password;
+  var userObj = {
+    username: user,
+    ID: Object.keys(req.body).length
+  }
 
   // if user does not exist
   if (!authedUsers[user]) {
@@ -340,9 +348,7 @@ app.post('/api/login', function(req, res) {
 
     // if all checks out
     } else {
-      var token = jwt.sign({username: user}, tokenSecret, {
-        expiresIn: 47700
-      });
+      var token = auth.genToken(userObj);
 
       res.json({
         success: true,
