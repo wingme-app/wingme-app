@@ -180,17 +180,48 @@ app.use('/api/wings', require('./routes/wings.js'));
 //                         })
 //    .catch(function(err) { console.log('err in users insert is ', err) });
 
-// knex('users')
-//    .insert({username: 'annie',
-//             })
-//    .then(function(name) { console.log(JSON.stringify(name)); })
-//    .catch(function(err) { console.log(err) });
+//knex('users')
+   // .insert({username: 'jess',
+   //          })
+   // .then(function(name) { console.log(JSON.stringify(name)); })
+   // .catch(function(err) { console.log(err) });
 
 // knex('users')
-//    .insert({username: 'ben',
+//    .insert({username: 'jessica',
+//             firstname: 'ch',
+//             lastname: 'jessMaster',
+//             email: 'jess@email.com',
+//             password: 'dog'
 //             })
 //    .then(function(name) { console.log(JSON.stringify(name)); })
 //    .catch(function(err) { console.log(err) });
+//    knex('users')
+//    .insert({username: 'kan',
+//             firstname: 'kan',
+//             lastname: 'kanlol',
+//             email: 'kan@email.com',
+//             password: 'dog'
+//             })
+//    .then(function(name) { console.log(JSON.stringify(name)); })
+//    .catch(function(err) { console.log(err) });
+//    // knex('users')
+//    // .insert({username: 'ben',
+//    //          firstname: 'ben',
+   //          lastname: 'benlol',
+   //          email: 'kan@email.com',
+   //          password: 'dog'
+   //          })
+   // .then(function(name) { console.log(JSON.stringify(name)); })
+   // .catch(function(err) { console.log(err) });
+   // knex('users')
+   // .insert({username: 'annie',
+   //          firstname: 'annie',
+   //          lastname: 'annieMaster',
+   //          email: 'kan@email.com',
+   //          password: 'dog'
+   //          })
+   // .then(function(name) { console.log(JSON.stringify(name)); })
+   // .catch(function(err) { console.log(err) });
 
 // knex('users')
 //    .insert({username: 'kan',
@@ -198,22 +229,32 @@ app.use('/api/wings', require('./routes/wings.js'));
 //    .then(function(name) { console.log(JSON.stringify(name)); })
 //    .catch(function(err) { console.log(err) });
 
+// knex('users')
+//    .insert({username: 'Dain',
+//             })
+//    .then(function(name) { console.log(JSON.stringify(name)); })
+//    .catch(function(err) { console.log(err)});
 
 // knex('duos')
-//    .insert({uID1: Duos.uID1,
-//             uID2: Duos.uID2,
-//             status : Duos.status})
+//    .insert({uID1: 35,
+//             uID2: 36,
+//             status : 'null'})
 //       .then(function(){console.log('duos injected');})
 //       .catch(function(err){console.log('err in duos insert is ', err);})
 
 
-// // knex('duos')
-// //    .insert({uID1: 15,
-// //             uID2: 16,
-// //           status : 'ok'})
-// //       .then(function(){console.log('duos 2 injected');})
-// //       .catch(function(err){console.log(err);})
-
+// knex('duos')
+//    .insert({uID1: 1,
+//             uID2: 6,
+//           status : 'null'})
+//       .then(function(){console.log('duos 2 injected');})
+//       .catch(function(err){console.log(err);})
+// knex('duos')
+//    .insert({uID1: 5,
+//             uID2: 6,
+//           status : 'null'})
+//       .then(function(){console.log('duos 2 injected');})
+//       .catch(function(err){console.log(err);})
 
 // knex('pairs')
 //     .insert({dID1: Pairs.dID1,
