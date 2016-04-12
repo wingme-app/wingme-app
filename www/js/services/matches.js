@@ -77,7 +77,7 @@ function matches($http, $state, Auth) {
       url: 'http://localhost:8000/api/duos/'
     };
     
-    return $http(request)
+    return $http(Auth.attachToken(request))
       .then(success, error);
 
     function success(response) {
