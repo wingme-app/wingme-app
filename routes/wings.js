@@ -2,7 +2,13 @@ var express = require('express');
 var router = express.Router();
 // var auth = require('../modules/auth');
 // we'll want to load the database module (knex) to make queries
-var knex = require('../db/config.js').knex;
+var knex = require('../db/config').knex;
+
+// router.post('/hello', function(req, res) {
+//   console.log("hiii", req.body);
+//   res.send("hi");
+// });
+
 /**
  *  router/wings.js
  *
@@ -67,8 +73,7 @@ router.post('/add', function(req, res) {
     .catch(function(err) {
      console.log('Error is', err);
    })
- })
-
+ });
 
 
 
@@ -77,6 +82,7 @@ router.post('/requests', function(req, res) {
 
 
 });
+
   /**
    *  You'll notice that we use res.json({}) to send responses to our client
    *  regardless of whether the operation succeeded or not. This is because

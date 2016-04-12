@@ -1,7 +1,7 @@
 var knex = require('knex')({
   client: 'sqlite3',
   connection: {
-    filename: "./data/db.sqlite"
+    filename: "./data/dummy-db.sqlite"
   },
   useNullAsDefault: true
 });
@@ -17,7 +17,7 @@ knex.schema.createTableIfNotExists('users', function (table) {
   table.integer('currentduoID');
   table.string('email');
   table.string('password');
-  table.foreign('currentduoID').references('duos.ID');
+  table.foreign('currentDuoID').references('duos.ID');
 }).then(function(){
 	console.log('Users schema created.');
 });
