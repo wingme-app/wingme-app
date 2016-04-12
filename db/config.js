@@ -1,14 +1,17 @@
 var knex = require('knex')({
-  dialect: 'sqlite3',
+  client: 'sqlite3',
   connection: {
-    filename: './data/dummy-db.sqlite'
+    filename: "./data/db.sqlite"
   },
   useNullAsDefault: true
 });
 
+var Bookshelf = require('bookshelf')(knex);
+var bookshelf = Bookshelf;
+
 knex.schema.createTableIfNotExists('users', function (table) {
   table.increments('ID').primary();
-  table.string('username').unique();
+  table.string('username');
   table.string('firstname');
   table.string('lastname');
   table.string('email');
@@ -38,3 +41,8 @@ knex.schema.createTableIfNotExists('pairs', function (table) {
 }).then(function(){
 	console.log('Pairs schema created.');
 });
+
+module.exports = {
+  knex: knex,
+  bookshelf: bookshelf
+}

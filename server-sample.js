@@ -35,7 +35,7 @@ app.use(cors());
  */
 app.use('/api/signup', require('./routes/signup'));
 app.use('/api/login', require('./routes/login'));
-// app.use('/api/wings', require('./routes/wings'));
+app.use('/api/wings', require('./routes/wings'));
 // app.use('/api/duos', require('./routes/duos'));
 
 
