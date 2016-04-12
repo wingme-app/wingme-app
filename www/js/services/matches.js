@@ -6,7 +6,7 @@ module.factory('Matches', matches);
 
 // --------------------------------------
 
-function matches($http, $state) {
+function matches($http, $state, Auth) {
 
   var potentialMatches = [];
   var all = [];
@@ -25,7 +25,7 @@ function matches($http, $state) {
       url: 'http://localhost:8000/api/duos/find' //edit duos on url in backend
     };
     
-    return $http(request)
+    return $http(Auth.attachToken(request))
       .then(success, error);
 
     // return currentWings;
@@ -60,7 +60,7 @@ function matches($http, $state) {
       data: matchObj
     };
     
-    return $http(request)
+    return $http(Auth.attachToken(request))
       .then(success, error);
 
     function success(response){

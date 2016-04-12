@@ -12,7 +12,8 @@ function auth($http, $window, $state, $rootScope, Config) {
     signup: signup,
     login: login,
     logout: logout,
-    isAuthed: isAuthed
+    isAuthed: isAuthed,
+    attachToken: attachToken
   }
 
   // ------------
@@ -100,9 +101,10 @@ function auth($http, $window, $state, $rootScope, Config) {
   function attachToken(request) {
     var token = getToken();
     if (token) {
+      request.headers = request.headers || {};
       request.headers['x-access-token'] = token;
     }
-    return token;
+    return request;
   }
 
   // parse the token (decode) to detect the expiration. (used in isAuthed())
