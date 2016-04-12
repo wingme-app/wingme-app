@@ -1,0 +1,26 @@
+<ion-view view-title="My Matches">
+  <ion-content>
+
+	<div class="list">
+	<!-- ACCEPTED LIST -->
+		<div class="item item-divider">
+	    	Accepted
+  		</div>
+	    <div class="item item-avatar" ng-repeat = "myMatch in myMatches.myMatchesArray">
+	    	<img ng-src="{{myMatch.imageURL}}">
+	    	<h2>{{myMatch.users[0] + "+" + myMatch.users[1]}}</h2>
+	    	<h3>{{myMatch.status}}</h3>
+	    </div>
+	<!-- PENDNIG LIST -->
+	    <div class="item item-divider">
+	    	Pending
+  		</div>
+	    <div class="item item-avatar" ng-repeat = "myPotentialMatch in myMatches.pendingMatchesArray">
+	    	<img ng-src="{{myPotentialMatch.imageURL}}">
+	    	<h2>{{myPotentialMatch.users[0] + "+" + myPotentialMatch.users[1]}}</h2>
+	    	<h3>{{myPotentialMatch.status}}</h3>
+	    </div>
+	</div>
+
+  </ion-content>
+</ion-view>

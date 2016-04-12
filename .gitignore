@@ -56,3 +56,9 @@ bower_components
 
 platforms/
 plugins/
+
+# Database
+#
+#
+
+data/

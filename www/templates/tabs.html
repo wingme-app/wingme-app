@@ -5,19 +5,29 @@ navigation history that also transitions its views in and out.
 -->
 <ion-tabs class="tabs-icon-top tabs-color-active-positive">
 
-  <!-- Dashboard Tab -->
-  <ion-tab title="Status" icon-off="ion-ios-pulse" icon-on="ion-ios-pulse-strong" href="#/tab/dash">
-    <ion-nav-view name="tab-dash"></ion-nav-view>
+  <!-- Add Wing Tab -->
+  <ion-tab title="Add Wing" icon-off="ion-ios-plus-empty" 
+  icon-on="ion-android-add" 
+  href="#/tab/addWing">
+    <!-- change tab-dash -->
+    <ion-nav-view name="tab-addWing"></ion-nav-view>
   </ion-tab>
 
-  <!-- Chats Tab -->
-  <ion-tab title="Chats" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/chats">
-    <ion-nav-view name="tab-chats"></ion-nav-view>
+  <!-- Wing Status / MyWings-->
+  <ion-tab title="My Wings" icon-off="ion-person-stalker" icon-on="ion-person-stalker" href="#/tab/myWings">
+    <!-- change tab-chats -->
+    <ion-nav-view name="tab-myWings"></ion-nav-view>
   </ion-tab>
 
-  <!-- Account Tab -->
-  <ion-tab title="Account" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account">
-    <ion-nav-view name="tab-account"></ion-nav-view>
+  <!-- Find Match -->
+  <ion-tab title="Find Match" icon-off="ion-ios-search" icon-on="ion-ios-search-strong" href="#/tab/findMatch">
+    <ion-nav-view name="tab-findMatch"></ion-nav-view>
+  </ion-tab>
+
+  <!-- My matches -->
+  <ion-tab title="My Matches" icon-off="ion-ios-paper-outline" icon-on="ion-ios-paper-outline" href="#/tab/myMatches">
+    <!-- change tab-account -->
+    <ion-nav-view name="tab-myMatches"></ion-nav-view>
   </ion-tab>
 
 
