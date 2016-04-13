@@ -11,15 +11,17 @@ function makeUsers() {
 function makeDuos() {
   return knex('users').then(function(users) {
     users.forEach(function(user, userIndex) {
-      if (userIndex >= users.length - 5) {
+      if (userIndex >= users.length - 6) {
         return;
       }
 
-      for (var i = 1; i < 5; i++) {
+      for (var i = 1; i < 6; i++) {
+        var cwStatus = i % 2 ? 'pending' : null;
         knex('duos').insert({
           uID1: user.ID,
           uID2: user.ID + i,
-          status: 'pending'
+          status: 'pending',
+          cwStatus: cwStatus
         }).then(function(resp) {
           console.log(resp);
         })
@@ -157,9 +159,9 @@ var users = [
 
 makeUsers();
 
-setTimeout(makeDuos, 2000);
+// setTimeout(makeDuos, 2000);
 
-setTimeout(makePairs, 4000);
+// setTimeout(makePairs, 4000);
 
 // knex('pairs').then(function(resp) {
 //   console.log(resp);
