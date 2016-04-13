@@ -1,4 +1,4 @@
-// var jwt = require('jsonwebtoken');
+var jwt = require('jsonwebtoken');
 
 var tokenSecret = 'CouchBase35';
 var decode = module.exports.decode = function(token) {
