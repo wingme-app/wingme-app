@@ -4,3 +4,8 @@
 .potential-match {
 	width: 100%;
 }
+
+.float-right {
+	float: right;
+	top: -20px;
+}
