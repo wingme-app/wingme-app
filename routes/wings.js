@@ -5,11 +5,6 @@ var router = express.Router();
 var knex = require('../db/config').knex;
 var auth = require('../modules/auth');
 
-// router.post('/hello', function(req, res) {
-//   console.log("hiii", req.body);
-//   res.send("hi");
-// });
-
 /**
  *  router/wings.js
  *
@@ -150,9 +145,9 @@ router.post('/wingRequests', function(req, res) {
 
 // request for any accepted duo partners that have a pending.
 router.get('/current', function(req, res) {
-  // var tokenObj = auth.decode(req.headers['x-access-token']);
-  // var clientID = tokenObj.ID;
-  // var clientUsername = tokenObj.username;
+  var tokenObj = auth.decode(req.headers['x-access-token']);
+  var clientID = tokenObj.ID;
+  var clientUsername = tokenObj.username;
 
   // testing
   var clientID = req.headers.clientid;
@@ -168,40 +163,135 @@ router.get('/current', function(req, res) {
     });
 });
 
+// request for any accepted duo partners that have a pending.
+router.get('/current', function(req, res) {
+  // find any rows where uID1 == clientID and the cwStatus == pending
+  knex('duos as d')
+    .where('uID1', clientID)
+    .andWhere('cwStatus', 'pending')
+    .join('users as u', 'd.uID2', '=', 'u.ID')
+    .select('d.ID', 'u.ID', 'u.firstname', 'u.lastname')
+    .then(function(resp) {
+      res.json({
+        success: true,
+        message: 'Here are the list of potential users that have been added',
+        results: resp
+      });
+    });
+});
+
+
 router.post('/current', function(req, res) {
   /* we are expecting req.body to contain an obj:
     {
-      duoID in question
+      client gives duoID in question where  uID1: clientID, 
       targetuID in question
-      status of post: accepted/rejected
+      client is sending status: accepted/rejected this target request
     }
   */
-
+  var duoID2;
+  knex('duos')
+    .where('ID', req.body.duoID)
+    .select('cwStatus')
+    .then(function(status) {
+      console.log('line 153 duoID',req.body.duoID);
+      console.log('status is', status);
+      console.log('line 154 cwStatus[0]',status[0].cwStatus);
+        knex('duos')
+          .where('uID1', req.body.targetuID)
+          .andWhere('uID2', req.body.clientID)
+          .select('ID')
+          .then(function(id) {
+            //if id exists
+            console.log('line 167 ID of  target and client',id)
+            if (id.length > 0) {
+            duoID2 = id[0].ID;
+            console.log(id[0].ID);
+            return duoID2;
+            }
+          })
   // if a row for uID1=clientID & uID2=targetuID has a currentWing status of pending,
   // that means that the targetuID already sent a currentWing request to clientID
-    
-    // if status = accepted
+      if (status[0].cwStatus === 'pending') {
+      // if req.status = accepted
+        if (req.body.status === 'accepted') {
+        // find all duo rows for uID2 = clientID || targetuID EXCEPT for the duoIDs being targeted
 
-      // find all duo rows for uID2 = clientID || targetuID EXCEPT for the duoIDs being targeted
-      // set the status to null
+          knex('duos')
+            .whereNot('uID1', req.body.clientID)
+            .andWhereNot('uID1', req.body.targetuID)
+            .orWhereNot('uID2', req.body.clientID)
+            .andWhereNot('uID2', req.body.targetuID)
+            .select('ID')
+            .then(function(idarray){
+              console.log('line 192 idarray',idarray);
+                return idarray.forEach(function(currentEl){
+                  if(currentEl.ID !==req.body.duoID || currentEl.ID !==duoID2){
+                    knex('duos')
+                    .where({ ID: currentEl.ID})
+                    .update( {cwStatus: 'null'} )
+                    .then(function(){
+                      res.send({
+                        message:'All other wing requests have their cwStatus set to null.'
+                      })
+                    })
+                  }
+                })
+              })
+        }
 
-    // if status = rejected
-
+      } else if (req.body.status === 'rejected') {
       // find both duo rows 
       // (where uID1 = clientID & uID2 = targetuID) &
       // (where uID1 = targetuID & uID2 = clientID)
-      // set the status to null
 
-  // else (if a row for uID1=clientID & uID2=targetuID has a currentWing status of null)
+        knex('duos')
+          
+            .where('ID', req.body.duoID)
+            .andWhere('ID', duoID2)
 
-    // if status = accepted
+            // .orWhere('ID', req.body.duoID)
+            // .andWhere('ID', req.body.duoID2)
+            .select('ID')
+          // .where('ID',req.body.duoID)
+          // .orWhere('ID', duoID2)
+          // .select('ID')
+          //.update({ cwStatus: 'null' })
+          .then(function(resp) {
+            console.log('line 209 resp',resp)
+            console.log('req.body.duoID',req.body.duoID)
+            console.log('line 210 duoid2',duoID2)
+            res.send({
+              message: 'You have rejected this wing request.'
+            });
+          })
+      // else (if a row for uID1=clientID & uID2=targetuID has a currentWing status of null)
+      } 
+      }
+      
+      else if (status[0].cwStatus === 'null') {
+           //if req.status = rejected
 
+        // we can expect the req.status to only be accepted in this scenario.
+        // find row where ID = duoID (given inside of req.body)
+        // set cwStatus to active
+        knex('duos')
+         .where('ID',req.body.duoID)
+         .update({ cwStatus : 'active' })
+         .then(function(){
+           console.log('Client Duo ID status updated to active.')
+         });
 
-
-
-
-})
-
+         knex('duos')
+           .where('uID1', req.body.targetUID)
+           .andWhere('uID2', req.body.clientID)
+           .update({ cwStatus : 'pending' }) 
+           .then(function() {
+             console.log('Target Duo ID status updated to pending.')
+           });
+      }
+      })
+  })
 
 
 function sendJSON(res, success, message, results) {
