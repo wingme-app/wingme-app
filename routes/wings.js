@@ -265,11 +265,9 @@ router.post('/current', function(req, res) {
               message: 'You have rejected this wing request.'
             });
           })
+
       // else (if a row for uID1=clientID & uID2=targetuID has a currentWing status of null)
-      } 
-      }
-      
-      else if (status[0].cwStatus === 'null') {
+      } else if (status[0].cwStatus === 'null') {
            //if req.status = rejected
 
         // we can expect the req.status to only be accepted in this scenario.
