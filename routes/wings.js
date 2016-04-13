@@ -105,6 +105,7 @@ router.get('/wingRequests', function(req, res) {
     .then(function(resp) {
 
       var results = resp.map(convertData);
+      console.log(results);
 
       knex('duos as d')
         .where('uID1', clientID)
@@ -112,6 +113,7 @@ router.get('/wingRequests', function(req, res) {
         .select('u.ID', 'u.firstname', 'u.lastname', 'd.status', 'd.cwStatus')
         .then(function(resp) {
           results = results.concat(resp.map(convertData));
+          console.log(results);
           sendJSON(res, true, 'enjoy your wing requests!', results);
         });
 
@@ -137,10 +139,10 @@ router.post('/wingRequests', function(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientID = tokenObj.ID;
   var clientUsername = tokenObj.username;
+  var targetID = req.body.targetuID;
 
   // testing
   // var clientID = req.headers.clientid;
-  // var targetID = req.body.targetuID;
 
   knex('duos')
     .whereIn('uID1', [clientID, targetID])
@@ -189,8 +191,6 @@ router.get('/current', function(req, res) {
       });
     });
 });
-
-
 
 router.post('/current', function(req, res) {
   var duoID2;
