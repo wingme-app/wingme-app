@@ -14,10 +14,10 @@ knex.schema.createTableIfNotExists('users', function (table) {
   table.string('username');
   table.string('firstname');
   table.string('lastname');
-  table.integer('currentduoID');
+  table.integer('currentWing');
   table.string('email');
   table.string('password');
-  table.foreign('currentduoID').references('duos.ID');
+  table.foreign('currentWing').references('duos.ID');
 }).then(function(){
 	console.log('Users schema created.');
 });
