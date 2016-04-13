@@ -11,6 +11,7 @@ module.controller('WingRequestsCtrl', function(Wings) {
 
   Wings.getWings()
     .then(function(currentWings) {
+      console.log('data from getWings', currentWings);
       vm.wingRequests = currentWings.filter(function(user) {
         return !user.isWing;
       });
@@ -20,7 +21,6 @@ module.controller('WingRequestsCtrl', function(Wings) {
         }
         return user.isWing;
       });
-      console.log(vm.currentWing);
     });
  
   vm.updateWing = Wings.updateWing;

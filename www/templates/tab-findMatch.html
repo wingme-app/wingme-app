@@ -8,7 +8,7 @@
   	<!-- button bar -->
   	<div class="button-bar">
   		<!-- reject match button -->
-	  	<button class="button button-outline button-assertive" ng-click="findMatch.nextMatch()">Reject</button>
+	  	<button class="button button-outline button-assertive" ng-click="findMatch.nextMatch(findMatch.potentialMatches)">Reject</button>
 	  	<!-- accept match button -->
 	  	<button class="button button-outline button-positive" ng-click="findMatch.confirmMatch(findMatch.potentialMatches[0])">Accept</button>
   		

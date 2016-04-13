@@ -18,9 +18,24 @@
 	    <div class="item item-avatar" ng-repeat = "myPotentialMatch in myMatches.pendingMatchesArray">
 	    	<img ng-src="{{myPotentialMatch.imageURL}}">
 	    	<h2>{{myPotentialMatch.users[0] + "+" + myPotentialMatch.users[1]}}</h2>
-	    	<h3>{{myPotentialMatch.status}}</h3>
+	    	<!-- <h3>{{myPotentialMatch.status}}</h3> -->
+	    	<!-- Accept/Deny buttons -->
+	    	<ion-option-button class="button-outline button-positive float-right">Accept</ion-option-button>
+        	<ion-option-button class="button-outline button-assertive float-right">Deny</ion-option-button>
 	    </div>
 	</div>
+
+	<!-- <ion-list show-delete="shouldShowDelete" show-reorder="shouldShowReorder" can-swipe="listCanSwipe">
+		<ion item ng-repeat = "myPotentialMatch in myMatches.pendingMatchesArray" class="item-thumbnail-left">
+			<img ng-src="{{myPotentialMatch.imageURL}}">
+	    	<h2>{{myPotentialMatch.users[0] + "+" + myPotentialMatch.users[1]}}</h2>
+	    	<h3>{{myPotentialMatch.status}}</h3>
+	    	<ion-option-button class="button-positive" ng-click = "edit(item)"> Reject
+	    	<ion-option-button class="button-positive" ng-click = "edit(item)"> Accept
+	    	<ion-delete-button class="ion-minus-circled" ng-click="items.splice($index, 1)"></ion-delete-button>
+	    </ion-item>
+	</ion-list>
+ -->
 
   </ion-content>
 </ion-view>

@@ -16,7 +16,8 @@ function matches($http, $state, Auth, Config) {
     getMatches: getMatches,// get all possible matches
     viewPotentialMatch: viewPotentialMatch,
     confirmMatch: confirmMatch,
-    getMyMatches: getMyMatches
+    getMyMatches: getMyMatches,
+    nextMatch: nextMatch
   };
 
   // ------------
@@ -36,6 +37,7 @@ function matches($http, $state, Auth, Config) {
       console.log(response);
       // this is what response looks like:
       // push in each match object to potential matches array
+      console.log('find', response);
       response.data.results.forEach(function(match){
         potentialMatches.push(match);
       });
@@ -54,7 +56,6 @@ function matches($http, $state, Auth, Config) {
   }
 
   function confirmMatch(matchObj){
-    console.log('Match Accepted, this is the matchObj post', matchObj);
     var request = {
       method: 'POST',
       url: Config.dev.api + '/pairs/',
@@ -66,9 +67,21 @@ function matches($http, $state, Auth, Config) {
 
     function success(response){
       // console.log('this is the response line 67 sucess, ', response);
+      console.log('this is response', response);
+      return response.config.data;
     }
     function error(response){
       // console.log('this is the response line 70 error, ', response);
+    }
+  }
+
+  function nextMatch(array){
+    if (array.length === 1){
+      array.shift();
+      array.push({imageURL: 'http://www.gimmesomeoven.com/wp-content/uploads/life/2013/10/Picky-576x576.jpg'});
+    }
+    else {
+      array.shift();
     }
   }
 
@@ -102,14 +115,7 @@ function matches($http, $state, Auth, Config) {
       console.log('error in myMatches ', response );
     }
   }
-
-
-/*
-  function getRandomInt(min, max){
-    return Math.floor(Math.random() *  (max - min + 1)) + min;
-  }
-*/
-
+  
 } 
 
 })(); // end
