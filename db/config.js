@@ -14,10 +14,8 @@ knex.schema.createTableIfNotExists('users', function (table) {
   table.string('username');
   table.string('firstname');
   table.string('lastname');
-  table.integer('currentduoID');
   table.string('email');
   table.string('password');
-  table.foreign('currentDuoID').references('duos.ID');
 }).then(function(){
 	console.log('Users schema created.');
 });
@@ -27,6 +25,7 @@ knex.schema.createTableIfNotExists('duos', function (table) {
   table.integer('uID1');
   table.integer('uID2');
   table.string('status');
+  table.string('imgageURL');
   table.foreign('uID1').references('users.ID');
   table.foreign('uID2').references('users.ID');
 }).then(function(){

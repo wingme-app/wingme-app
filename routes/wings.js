@@ -98,6 +98,17 @@ router.post('/add', function(req, res) {
 
 // Get request route
 router.get('/requests', function(req, res) {
+  //Query Duos table w. clientID, retrieve DuoPK's client is part of
+  knex('duos as d').where({ uID1: req.body.clientID })
+   .join('users as u', 'd.uID2', '=', 'u.ID')
+   .select('u.ID', 'u.firstname', 'u.lastname', 'd.status', 'u.currentWing')
+   .then(function(resp) {
+    resp.forEach(function(currentEl) {
+      if (currentEl.ID === currentEl.currentWing) {
+        knex('')
+      }
+    })
+   })
 
 
 });

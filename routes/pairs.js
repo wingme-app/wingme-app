@@ -12,13 +12,13 @@ var knex = require('../db/config').knex;
 router.get('/', function(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientDuoID = tokenObj.currentDuoID;
-  // var clientID = tokenObj.ID;
-  // var clientUsername = tokenObj.username;
+  var clientID = tokenObj.ID;
+  var clientUsername = tokenObj.username;
 
-  // dummy ID
+  // dummy ID: remove this for non-testing.
   var clientDuoID = 1;
 
-  // get all pairs that this duo is inside
+  // get all pairs that this client duo is involved in.
   knex('pairs')
     .whereIn('dID1', [clientDuoID])
     .orWhereIn('dID2', [clientDuoID])
@@ -46,7 +46,7 @@ router.get('/', function(req, res) {
         .orWhereNotIn('d.uID2', [clientDuoID])
         .join('users as u1', 'd.uID1', '=', 'u1.ID')
         .join('users as u2', 'd.uID2', '=', 'u2.ID')
-        .select('d.ID', 'u1.firstname as user1', 'u2.firstname as user2')
+        .select('d.ID', 'u1.firstname as user1', 'u2.firstname as user2', 'd.imageURL')
         .then(function(resp) {
           // resp is an [] array of objects { dID, fn1, fn2 }
 
@@ -56,6 +56,7 @@ router.get('/', function(req, res) {
             } else {
               duo.status = null;
             }
+            duo.imageURL = duo.imageURL || 'http://www.psdgraphics.com/file/couple-silhouette.jpg';
             return duo;
           });
 
@@ -84,6 +85,17 @@ router.post('/', function(req, res) {
         knex('pairs')
           .where({ID: resp[0].ID})
           .update({status: 'accepted'})
+          .then(function(resp) {
+            res.json({
+              success: true,
+              message: 'The pair status was changed from pending to accepted.'
+            });
+          }, function(err) {
+            res.json({
+              success: false,
+              message: err
+            });
+          })
 
       // otherwise insert with 'pending' status
       } else {
@@ -94,7 +106,15 @@ router.post('/', function(req, res) {
             status: 'pending'
           })
           .then(function(resp) {
-            console.log(resp);
+            res.json({
+              success: true,
+              message: 'The pair status was changed from pending to accepted.'
+            });
+          }, function(err) {
+            res.json({
+              success: false,
+              message: err
+            });
           })
       }
     })

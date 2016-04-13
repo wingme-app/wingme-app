@@ -1,5 +1,57 @@
 var knex = require('../db/config.js').knex;
 
+function makeUsers() {
+  return knex('users').insert(users).then(function(resp) {
+    console.log('users were created');
+  }, function(err) {
+    console.error('user insertion error. Users were not created. err = ', err);
+  });
+}
+
+function makeDuos() {
+  return knex('users').then(function(users) {
+    users.forEach(function(user, userIndex) {
+      if (userIndex >= users.length - 5) {
+        return;
+      }
+
+      for (var i = 1; i < 5; i++) {
+        knex('duos').insert({
+          uID1: user.ID,
+          uID2: user.ID + i,
+          status: 'pending'
+        }).then(function(resp) {
+          console.log(resp);
+        })
+      }
+    })
+  })
+}
+
+function makePairs() {
+  return knex('duos').then(function(duos) {
+    duos.forEach(function(duo, duoIndex) {
+      if (duoIndex >= duos.length - 5) {
+        return;
+      }
+
+      for (var i = 1; i < 5; i++) {
+        knex('pairs').insert({
+          dID1: duo.ID,
+          dID2: duo.ID + i,
+          status: 'pending'
+        }).then(function(resp) {
+          console.log(resp);
+        });
+      }
+    })
+  })
+}
+
+
+// ------------------------------
+// ------------------------------
+
 var users = [
 {
   username: 'kan',
@@ -100,63 +152,15 @@ var users = [
 }
 ]
 
-// knex('duos').then(function(resp) {
+// run that shiz
+// -----------------------------------------
 
-//   for (var i = 0; i < resp.length; i+=2) {
-//     knex('pairs').insert({
-//       dID1: resp[i].ID,
-//       dID2: resp[i+1].ID
-//     }).then(function(resp) {
-//       console.log(resp);
-//     });
-//   }
+makeUsers();
 
-// });
+setTimeout(makeDuos, 2000);
+
+setTimeout(makePairs, 4000);
 
 // knex('pairs').then(function(resp) {
-//   for (var i = 0; i < resp.length; i++) {
-//     var status;
-//     if (i % 3 === 0) {
-//       status = null
-//     } else if (i % 3 === 1) {
-//       status = 'pending'
-//     } else {
-//       status = 'accepted'
-//     }
-//     knex('pairs')
-//       .where({ID: resp[i].ID})
-//       .update({
-//         status: status
-//       }).then(function(resp) {});
-//   }
+//   console.log(resp);
 // })
-
-knex('pairs')
-  .whereIn('dID1', [2, 1])
-  .whereIn('dID2', [1, 2])
-  .then(function(resp) {
-    console.log(resp);
-  });
-
-// setTimeout(function() {
-
-//   // knex('duos as d')
-//   //   .join('users as u1', 'd.uID1', '=', 'u1.ID')
-//   //   .join('users as u2', 'd.uID2', '=', 'u2.ID')
-//   //   .select('d.ID', 'u1.firstname as user1', 'u2.firstname as user2')
-//   //   .then(function(resp) {
-//   //     console.log(resp);
-//   //   })
-
-//   knex('duos as d')
-//     .whereNotIn('d.uID1', [1])
-//     .whereNotIn('d.uID2', [1])
-//     .join('users as u1', 'd.uID1', '=', 'u1.ID')
-//     .join('users as u2', 'd.uID2', '=', 'u2.ID')
-//     .select('d.ID', 'u1.firstname as user1', 'u2.firstname as user2')
-//     .then(function(resp) {
-//       console.log(resp);
-//     });
-
-
-// }, 1000);
