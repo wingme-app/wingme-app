@@ -6,7 +6,7 @@ module.factory('Matches', matches);
 
 // --------------------------------------
 
-function matches($http, $state, Auth) {
+function matches($http, $state, Auth, Config) {
 
   var potentialMatches = [];
   var all = [];
@@ -24,7 +24,7 @@ function matches($http, $state, Auth) {
   function getMatches(){
     var request = {
       method: 'GET',
-      url: 'http://localhost:8000/api/duos/find' //edit duos on url in backend
+      url: Config.dev.api + '/pairs/' //edit duos on url in backend
     };
     
     return $http(Auth.attachToken(request))
@@ -33,6 +33,7 @@ function matches($http, $state, Auth) {
     // return currentWings;
 
     function success(response) {
+      console.log(response);
       // this is what response looks like:
       // push in each match object to potential matches array
       response.data.results.forEach(function(match){
@@ -56,7 +57,7 @@ function matches($http, $state, Auth) {
     console.log('Match Accepted, this is the matchObj post', matchObj);
     var request = {
       method: 'POST',
-      url: 'http://localhost:8000/api/duos/find',
+      url: Config.dev.api + '/pairs/',
       data: matchObj
     };
     
@@ -74,7 +75,7 @@ function matches($http, $state, Auth) {
   function getMyMatches(){
     var request = {
       method: 'GET',
-      url: 'http://localhost:8000/api/duos/'
+      url: Config.dev.api + '/pairs/'
     };
     
     return $http(Auth.attachToken(request))

@@ -22,7 +22,7 @@ function wings($http, $state, Config, Auth) {
 
     var request = {
       method: 'GET',
-      url: Config.dev.api + '/wings/requests'
+      url: Config.dev.api + '/wings/wingRequests'
     }
 
     return $http(Auth.attachToken(request))
@@ -34,7 +34,7 @@ function wings($http, $state, Config, Auth) {
     function success(response) {
       var currentWings = [];
 
-      response.data.potentialWings.forEach(function(wing) {
+      response.data.results.forEach(function(wing) {
         // we manipulate the current wings variable instead of reassigning the variable.
         // this forces a digest cycle refresh.
         currentWings.push(wing);
@@ -54,7 +54,7 @@ function wings($http, $state, Config, Auth) {
 
     var request = {
       method: 'POST',
-      url: Config.dev.api + '/wings/requests',
+      url: Config.dev.api + '/wings/wingRequests',
       data: {
         "wing" : username,
         "accepted" : status
