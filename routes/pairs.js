@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var auth = require('../modules/auth');
+var hp = require('../modules/helpers');
 
 // we'll want to load the database module (knex) to make queries
 var knex = require('../db/config').knex;
@@ -19,52 +20,52 @@ router.get('/find', function(req, res) {
   // dummy ID: remove this for non-testing.
   var clientDuoID = 4;
 
-  // get all duos that have a pending status going TO client (client is in dID2 column)
-  knex('pairs')
+  var clientID = 1;
+
+  knex('pairsPending')
     .where('dID2', clientDuoID)
-    .where('status', 'pending')
+    .select('dID1')
     .then(function(resp) {
-      // resp is an array of objects, and each object represents a pair.
-      // a pair looks like: {ID, dID1, dID2, status}
-
-      // we'll store what we find in a pairs object, to use in our sorting logic in the next query.
-      var pairs = {}; // opponentDuoID : pairObj
-
-      resp.forEach(function(pair) {
-        pairs[pair.dID1] = true;
+      // resp contains all duo IDs
+      var IDs = resp.map(function(duo) {
+        return duo.dID1;
       });
+      // [1, 3, 6, 9]
 
-      console.log(pairs);
-
-      // get all duos that doesn't include the current Duo.
       knex('duos as d')
-        .whereNot('d.uID1', clientDuoID)
-        .orWhereNot('d.uID2', clientDuoID)
-        .join('users as u1', 'd.uID1', '=', 'u1.ID')
-        .join('users as u2', 'd.uID2', '=', 'u2.ID')
-        .select('d.ID', 'u1.firstname as user1', 'u2.firstname as user2', 'd.imageURL')
+        .whereIn('ID', IDs)
+        .join('users as u1', 'duos.uID1', 'u1.ID')
+        .join('users as u2', 'duos.uID2', 'u2.ID')
+        .select('duos.ID as duoID', 'u1.firstname as u1Firstname', 'u1.lastname as u1Lastname', 'u2.firstname as u2Firstname', 'u2.lastname as u2Lastname')
+
         .then(function(resp) {
-          // resp is an [] array of objects { dID, fn1, fn2 }
-
-          var results = resp.map(function(duo, index) {
-            return { index: index, value: duo }
+          resp.forEach(function(duo) {
+            duo.status = "pending"
           });
+          return resp;
+        })
 
-          results.sort(function(a, b) {
-            if (a.value.ID in pairs && b.value.ID in pairs) {
-              return a.index - b.index;
-            } else if (a.value.ID in pairs) {
-              return -1;
-            } else {
-              return 1;
-            }
-          })
+        .then(function(pendingDuos) {
+          knex('duos')
+            .where(function() {
+              this.whereNot('uID1', clientID).orWhereNot('uID2', clientID)
+            })
+            .where('cwStatus', 'active')
+            .join('users as u1', 'duos.uID1', '=', 'u1.ID')
+            .join('users as u2', 'duos.uID2', '=', 'u2.ID')
+            .select('duos.ID as duoID', 'u1.firstname as u1Firstname', 'u1.lastname as u1Lastname', 'u2.firstname as u2Firstname', 'u2.lastname as u2Lastname')
 
-          results = results.map(function(obj) {
-            return obj.value;
-          });
+            .then(function(resp) {
+              resp.forEach(function(duo) {
+                duo.status = null;
+              });
 
-          sendJSON(res, true, 'Here is your super curated potential duos list!', results);
+              res.json({
+                success: true,
+                message: 'Here are a list of potential pairs you can pick from!',
+                results: resp.concat(pendingDuos)
+              });
+            });
         });
     });
 });
