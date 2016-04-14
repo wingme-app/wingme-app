@@ -4,6 +4,7 @@ var router = express.Router();
 // we'll want to load the database module (knex) to make queries
 var knex = require('../db/config').knex;
 var auth = require('../modules/auth');
+var _ = require('underscore');
 
 /**
  *  router/wings.js
@@ -17,9 +18,8 @@ router.post('/add', function(req, res) {
   var clientUsername = tokenObj.username;
   var wingToAdd = req.body.wingToAdd;
 
-  // testing:
+  // testing
   // var clientID = req.headers.clientid;
-  // var wingToAdd = req.body.wingToAdd;
 
   // does wingToAdd even exist?
   knex.select('ID')
@@ -52,38 +52,26 @@ router.post('/add', function(req, res) {
             return duo.uID1 == wingToAddID;
           })[0];
 
-          // if clientToWing entry already exists
-          if (clientToWing) {
-            if (clientToWing.status === 'pending') {
-              sendJSON(res, false, 'You already have a pending request to ' + wingToAdd + '!');
-            } else if (clientToWing.status === 'accepted') {
-              sendJSON(res, false, 'You are already wings with ' + wingToAdd + '!');
+          if (clientToWing && wingToClient) {
+
+            if (clientToWing.status === 'accepted' && wingToClient.status === 'pending') {
+              sendJSON(res, false, 'you already have a pending request to ' + wingToAdd);
+            } else if (clientToWing.status === 'accepted' && wingToClient.status === 'accepted') {
+              sendJSON(res, false, 'already wings bruh!');
+            } else if (wingToClient.status === 'accepted' && clientToWing.status === 'pending') {
+              knex('duos')
+                .where('ID', clientToWing.ID)
+                .update({ status : 'accepted' })
+                .then(function() {
+                  sendJSON(res, true, 'You are now winged up with ' + wingToAdd);
+                });
             }
 
-          // if wingToClient already exists
-          } else if (!clientToWing && wingToClient) {
-            // insert a new row representing client to wing
-            // then set status of both to 'accepted'
-            makeNewDuoEntry(clientID, wingToAddID, 'accepted')
-              .then(function() {
-                return acceptDuoEntries(clientID, wingToAddID);
-              })
-              .then(function() {
-                sendJSON(res, true, 'You and ' + wingToAdd + ' are now wings!');
-              });
-          
-          // if neither wingToClient or clientToWing relationships exist
           } else {
-            // set status of new entry to 'pending'
-            makeNewDuoEntry(clientID, wingToAddID, 'pending')
+            makeNewDuoEntry(clientID, wingToAddID)
               .then(function() {
-                sendJSON(res, true, 'You have sent a wing request to ' + wingToAdd + '.');
-
-                // debugging
-                knex('duos').then(function(resp) {
-                  console.log(resp);
-                })
-              });
+                sendJSON(res, true, 'You have sent a request to ' + wingToAdd);
+              });            
           }
 
         }); // end then() -----
@@ -95,62 +83,95 @@ router.get('/wingRequests', function(req, res) {
   var clientID = tokenObj.ID;
   var clientUsername = tokenObj.username;
 
-  // testing
+  // // testing
   // var clientID = req.headers.clientid;
 
-  knex('duos as d')
-    .where('uID2', clientID)
-    .join('users as u', 'd.uID1', '=', 'u.ID')
-    .select('u.ID', 'u.firstname', 'u.lastname', 'd.status', 'd.cwStatus')
+  knex('duos')
+    .where('uID1', clientID)
+    .orWhere('uID2', clientID)
     .then(function(resp) {
 
-      var results = resp.map(convertData);
-      console.log(results);
+      // resp contains all duos that clientID is involved in
 
-      knex('duos as d')
-        .where('uID1', clientID)
-        .join('users as u', 'd.uID2', '=', 'u.ID')
-        .select('u.ID', 'u.firstname', 'u.lastname', 'd.status', 'd.cwStatus')
+      // storage object
+      var storage = {};
+
+      // loop through resp
+      _.each(resp, function(duo) {
+        var targetID = (duo.uID1 === clientID) ? duo.uID2 : duo.uID1;
+        var relationship = (duo.uID1 === clientID) ? 'CT' : 'TC';
+
+        var entry = storage[targetID] || {};
+        storage[targetID] = entry;
+        entry[relationship] = [duo.status, duo.cwStatus];
+      }); 
+
+      knex('users')
+        .whereIn('ID', Object.keys(storage))
+        .select('ID', 'firstname', 'lastname')
         .then(function(resp) {
-          results = results.concat(resp.map(convertData));
-          console.log(results);
-          sendJSON(res, true, 'enjoy your wing requests!', results);
+
+          // map resp
+          var results = resp.map(function(user) {
+            var ID = user.ID;
+            var userObj = storage[ID];
+
+            user.isCurrentWing = (userObj.CT[1] === "accepted" && userObj.TC[1] === "accepted");
+            user.pendingCurrentWing = (userObj.CT[1] === "accepted" && userObj.TC[1] === "pending");
+            user.isWing = (userObj.CT[0] === "accepted" && userObj.TC[0] === "accepted");
+            user.pendingWing = (userObj.CT[0] === "accepted" && userObj.TC[0] === "pending");
+
+            return user;
+          });
+
+          sendJSON(res, true, 'enjoy your users!', results);
         });
-
-      function convertData(wing) {
-        // keep it a pure function
-        wing = Object.assign({}, wing);
-
-        // convert status to isWing boolean
-        wing.isWing = (wing.status === 'accepted') ? true : false;
-        delete wing.status;
-
-        // convert cwStatus to isCurrentWing boolean
-        wing.isCurrentWing = (wing.cwStatus === 'accepted') ? true : false;
-        delete wing.cwStatus;
-
-        return wing;
-      }
-
     });
 });
 
 router.post('/wingRequests', function(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientID = tokenObj.ID;
-  var clientUsername = tokenObj.username;
-  var targetID = req.body.targetuID;
 
   // testing
   // var clientID = req.headers.clientid;
 
+  var targetID = req.body.targetID;
+  var submittedStatus = req.body.accepted;
+
   knex('duos')
     .whereIn('uID1', [clientID, targetID])
-    .whereIn('uID2', [clientID, targetID])
-    .whereNot('status', 'accepted')
-    .update({ status: 'accepted' })
-    .then(function() {
-      sendJSON(res, true, 'wing request accepted!')
+    .whereIn('uID2', [targetID, clientID])
+    .then(function(resp) {
+
+      var clientToTarget = resp.filter(function(duo) {
+        return duo.uID1 === clientID;
+      })[0];
+      var targetToClient = resp.filter(function(duo) {
+        return duo.uID2 === clientID;
+      })[0];
+
+      if (submittedStatus) {
+
+        if (clientToTarget.status === 'accepted' && targetToClient.status === 'accepted') {
+          sendJSON(res, false, 'you are already wings with them!');
+        } else {
+          knex('duos')
+            .where('ID', clientToTarget.ID)
+            .update({ status: 'accepted' })
+            .then(function() {
+              sendJSON(res, true, 'you have accepted their wing request! :)');
+            });
+        }
+
+      } else {
+        knex('duos')
+          .whereIn('ID', [clientToTarget.ID, targetToClient.ID])
+          .update({ status: 'rejected' })
+          .then(function() {
+            sendJSON(res, false, 'you have rejected their wing request. :(');
+          })
+      }
     });
 
 })
@@ -162,7 +183,7 @@ router.get('/current', function(req, res) {
   var clientUsername = tokenObj.username;
 
   // testing
-  var clientID = req.headers.clientid;
+  // var clientID = req.headers.clientid;
 
   // find any rows where uID1 == clientID and the cwStatus == pending
   knex('duos as d')
@@ -287,12 +308,16 @@ function sendJSON(res, success, message, results) {
   res.json(response);
 }
 
-function makeNewDuoEntry(user1, user2, status) {
-  return knex('duos').insert({
+function makeNewDuoEntry(user1, user2) {
+  return knex('duos').insert([{
     uID1: user1,
     uID2: user2,
-    status: status
-  });
+    status: 'accepted',
+  }, {
+    uID1: user2,
+    uID2: user1,
+    status: 'pending'
+  }]);
 }
 
 function acceptDuoEntries(user1, user2) {

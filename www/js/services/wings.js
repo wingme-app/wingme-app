@@ -32,6 +32,9 @@ function wings($http, $state, Config, Auth) {
     // request callbacks
 
     function success(response) {
+
+      console.log('response = ', response);
+
       var currentWings = [];
 
       response.data.results.forEach(function(wing) {
@@ -40,7 +43,6 @@ function wings($http, $state, Config, Auth) {
         currentWings.push(wing);
       });
 
-      console.log(currentWings);
       return currentWings;
     }
 
@@ -49,14 +51,14 @@ function wings($http, $state, Config, Auth) {
     }
   }
 
-  function updateWing(username, index, status) {
+  function updateWing(userID, index, status) {
     // index is the position inside of the array of wings given to us in the get request.
 
     var request = {
       method: 'POST',
       url: Config.dev.api + '/wings/wingRequests',
       data: {
-        "wing" : username,
+        "targetID" : userID,
         "accepted" : status
       }
     };
