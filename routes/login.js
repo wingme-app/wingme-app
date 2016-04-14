@@ -20,7 +20,7 @@ router.post('/', function(req, res) {
       message: 'Please provide a username and password.'
     });
     
-  // if data validation passes, insert user object into database
+  // if data validation passes
   } else {
     knex('users').where({username: user.username})
       .then(function(resp) {
