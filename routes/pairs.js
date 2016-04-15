@@ -78,8 +78,27 @@ router.post('/find', function(req, res) {
   // testing
   var clientDuoID = req.body.clientDuoID
   var targetDuoID = req.body.targetDuoID;
+  var status = req.body.status; // accepted or rejected
 
-  // 
+  // if C->T exists inside of pairsPending
+  
+    // error: you've already sent a pair request to this duo!
+
+  // does T->C exist inside of pairsPending? if so:
+
+    // if status = accepted
+      // move T->C to pairs pairsAccepted table
+
+    // otherwise
+      // remove T-> entry from pairsPending
+
+  // if neither exists inside of pairsPending
+
+    // if status = accepted
+      // put C->T inside of pairsPending
+
+    // otherwise
+      // do nothing
 
 });
 
