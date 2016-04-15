@@ -205,14 +205,10 @@ router.post('/current', function(req, res) {
   var targetID = req.body.targetID;
   var requestStatus = req.body.status;
 
-<<<<<<< 6bbccead9052bafdca0cb3632d447f69f6f0ffe6
+  // testing
   // var clientID = req.headers.clientid;
 
   console.log(requestStatus);
-=======
-  //testing
-  var clientID = req.headers.clientid;
->>>>>>> [Bugfix]Wings route post status
 
   knex('duos')
     .where({uID1: clientID, uID2: targetID})
