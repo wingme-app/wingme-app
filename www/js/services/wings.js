@@ -51,14 +51,14 @@ function wings($http, $state, Config, Auth) {
     }
   }
 
-  function updateWing(userID, index, status) {
+  function updateWing(userID, status) {
     // index is the position inside of the array of wings given to us in the get request.
 
     var request = {
       method: 'POST',
       url: Config.dev.api + '/wings/wingRequests',
       data: {
-        "targetID" : userID,
+        "targetID" : userID, 
         "accepted" : status
       }
     };

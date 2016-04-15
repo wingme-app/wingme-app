@@ -9,6 +9,7 @@ module.controller('WingRequestsCtrl', function(Wings) {
   vm.allWingRequests = [];
   vm.wingRequestsSent = [];
   vm.wingRequestsReceived = [];
+  vm.confirmedWings = [];
   
 
 
@@ -16,7 +17,10 @@ module.controller('WingRequestsCtrl', function(Wings) {
   Wings.getWings()
     .then(function(currentWings) {
       console.log('data from getWings', currentWings);
-      // handles wing requests that have been sent 
+      // handles wing requests that have been sent
+      vm.confirmedWings = currentWings.filter(function(user){
+        return user.isWing && !user.pendingWing;
+      });
       vm.wingRequestsSent = currentWings.filter(function(user) {
         return !user.isWing && user.pendingWing;
       });
@@ -26,6 +30,9 @@ module.controller('WingRequestsCtrl', function(Wings) {
       });
       // combination of all wing requests
       vm.allWingRequests = currentWings;
+      console.log('this is WRS: ', vm.wingRequestsSent);
+      console.log('this is WRR: ', vm.wingRequestsReceived);
+      console.log('this is CWs: ', vm.confirmedWings);
     });
  
   vm.updateWing = Wings.updateWing;
