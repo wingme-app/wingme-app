@@ -6,21 +6,26 @@ module.controller('WingRequestsCtrl', function(Wings) {
 
   var vm = this;
 
-  vm.wings = [];
-  vm.wingRequests = [];
+  vm.allWingRequests = [];
+  vm.wingRequestsSent = [];
+  vm.wingRequestsReceived = [];
+  
+
+
 
   Wings.getWings()
     .then(function(currentWings) {
       console.log('data from getWings', currentWings);
-      vm.wingRequests = currentWings.filter(function(user) {
-        return !user.isWing;
+      // handles wing requests that have been sent 
+      vm.wingRequestsSent = currentWings.filter(function(user) {
+        return !user.isWing && user.pendingWing;
       });
-      vm.wings = currentWings.filter(function(user) {
-        if (user.currentWing) {
-          vm.currentWing = user.username;
-        }
-        return user.isWing;
+      // handle wing requests that have been received
+      vm.wingRequestsReceived = currentWings.filter(function(user){
+        return !user.isWing && !user.pendingWing;
       });
+      // combination of all wing requests
+      vm.allWingRequests = currentWings;
     });
  
   vm.updateWing = Wings.updateWing;

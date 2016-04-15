@@ -16,13 +16,23 @@
     <div class="item item-divider">
       Wing Requests
     </div>
-
+    
+    <!-- list of wing requests sent out and now PENDING-->
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="(index, wing) in myWings.wingRequests" type="item-text-wrap">
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="wing in myWings.wingRequestsSent" type="item-text-wrap">
         <img ng-src="./img/ben.png">
         <h2>{{wing.firstname}}</h2>
-        <i class="icon ion-chevron-right icon-accessory"></i>
+        <h3>Pending</h3>
+      </ion-item>
+    </ion-list>
 
+    <!-- list of wing requests that were received and now accept/reject -->
+
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="wing in myWings.wingRequestsReceived" type="item-text-wrap">
+        <img ng-src="./img/ben.png">
+        <h2>{{wing.firstname}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i> <!-- this is the arrow at end of row-->
         <ion-option-button class="button-positive" ng-click="myWings.updateWing(wing.ID, index, true)">
           Accept
         </ion-option-button>
