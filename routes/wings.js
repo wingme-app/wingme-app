@@ -14,13 +14,13 @@ var _ = require('underscore');
  */
 
 router.post('/add', function(req, res) {
-  // var tokenObj = auth.decode(req.headers['x-access-token']);
-  // var clientID = tokenObj.ID;
-  // var clientUsername = tokenObj.username;
+  var tokenObj = auth.decode(req.headers['x-access-token']);
+  var clientID = tokenObj.ID;
+  var clientUsername = tokenObj.username;
   var wingToAdd = req.body.wingToAdd;
 
   // testing
-  var clientID = Number(req.headers.clientid);
+  // var clientID = Number(req.headers.clientid);
 
   // does wingToAdd even exist?
   knex.select('ID')
@@ -80,12 +80,12 @@ router.post('/add', function(req, res) {
 });
 
 router.get('/wingRequests', function(req, res) {
-  // var tokenObj = auth.decode(req.headers['x-access-token']);
-  // var clientID = tokenObj.ID;
-  // var clientUsername = tokenObj.username;
+  var tokenObj = auth.decode(req.headers['x-access-token']);
+  var clientID = tokenObj.ID;
+  var clientUsername = tokenObj.username;
 
   // // testing
-  var clientID = Number(req.headers.clientid);
+  // var clientID = Number(req.headers.clientid);
 
   knex('duos')
     .where('uID1', clientID)
@@ -135,13 +135,13 @@ router.get('/wingRequests', function(req, res) {
 });
 
 router.post('/wingRequests', function(req, res) {
-  // var tokenObj = auth.decode(req.headers['x-access-token']);
-  // var clientID = tokenObj.ID;
+  var tokenObj = auth.decode(req.headers['x-access-token']);
+  var clientID = tokenObj.ID;
+  var submittedStatus = req.body.accepted;
+  var targetID = req.body.targetID;
 
   // testing
-  var clientID = Number(req.headers.clientid);
-  var targetID = req.body.targetID;
-  var submittedStatus = req.body.accepted;
+  // var clientID = Number(req.headers.clientid);
 
   knex('duos')
     .whereIn('uID1', [clientID, targetID])
@@ -182,12 +182,12 @@ router.post('/wingRequests', function(req, res) {
 
 // request for any accepted duo partners that have a pending.
 router.get('/current', function(req, res) {
-  // var tokenObj = auth.decode(req.headers['x-access-token']);
-  // var clientID = tokenObj.ID;
-  // var clientUsername = tokenObj.username;
+  var tokenObj = auth.decode(req.headers['x-access-token']);
+  var clientID = tokenObj.ID;
+  var clientUsername = tokenObj.username;
 
   // testing
-  var clientID = req.headers.clientid;
+  // var clientID = req.headers.clientid;
 
   // find any rows where uID1 == clientID and the cwStatus == pending
   knex('duos as d')
@@ -201,10 +201,12 @@ router.get('/current', function(req, res) {
 });
 
 router.post('/current', function(req, res) {
-
+  var tokenObj = auth.decode(req.headers['x-access-token']);
+  var clientID = tokenObj.ID;
   var targetID = req.body.targetID;
-  var clientID = req.headers.clientid;
   var requestStatus = req.body.status;
+
+  // var clientID = req.headers.clientid;
 
   console.log(requestStatus);
 
