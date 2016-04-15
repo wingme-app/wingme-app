@@ -19,56 +19,62 @@ router.get('/find', function(req, res) {
   // var clientUsername = tokenObj.username;
 
   // dummy ID: remove this for non-testing.
-  var clientDuoID = 4;
+  var clientID = req.headers.clientid;
+  knex('duos')
+    .where({uID1: clientID, cwStatus: 'active'})
+    .select('ID')
+    .then(function(resp){
+      return resp[0].ID;
+    })
 
-  var clientID = 1;
-
-  knex('pairsPending')
-    .where('dID2', clientDuoID)
-    .select('dID1')
-    .then(function(resp) {
-      // resp contains all duo IDs
-      var IDs = resp.map(function(duo) {
-        return duo.dID1;
-      });
-      // [1, 3, 6, 9]
-
-      knex('duos as d')
-        .whereIn('ID', IDs)
-        .join('users as u1', 'duos.uID1', 'u1.ID')
-        .join('users as u2', 'duos.uID2', 'u2.ID')
-        .select('duos.ID as duoID', 'u1.firstname as u1Firstname', 'u1.lastname as u1Lastname', 'u2.firstname as u2Firstname', 'u2.lastname as u2Lastname')
-
+    .then(function(clientDuoID) {
+      knex('pairsPending')
+        .where('dID2', clientDuoID)
+        .select('dID1')
         .then(function(resp) {
-          resp.forEach(function(duo) {
-            duo.status = "pending"
+          // resp contains all duo IDs
+          var IDs = resp.map(function(duo) {
+            return duo.dID1;
           });
-          return resp;
-        })
+          // [1, 3, 6, 9]
 
-        .then(function(pendingDuos) {
           knex('duos')
-            .where(function() {
-              this.whereNot('uID1', clientID).orWhereNot('uID2', clientID)
-            })
-            .where('cwStatus', 'active')
-            .join('users as u1', 'duos.uID1', '=', 'u1.ID')
-            .join('users as u2', 'duos.uID2', '=', 'u2.ID')
+            .whereIn('ID', IDs)
+            .join('users as u1', 'duos.uID1', 'u1.ID')
+            .join('users as u2', 'duos.uID2', 'u2.ID')
             .select('duos.ID as duoID', 'u1.firstname as u1Firstname', 'u1.lastname as u1Lastname', 'u2.firstname as u2Firstname', 'u2.lastname as u2Lastname')
 
             .then(function(resp) {
               resp.forEach(function(duo) {
-                duo.status = null;
+                duo.status = "pending"
               });
+              return resp;
+            })
 
-              res.json({
-                success: true,
-                message: 'Here are a list of potential pairs you can pick from!',
-                results: resp.concat(pendingDuos)
-              });
+            .then(function(pendingDuos) {
+              knex('duos')
+                .whereNot('uID1', clientID)
+                .whereNot('uID2', clientID)
+                .where('cwStatus', 'active')
+                .join('users as u1', 'duos.uID1', '=', 'u1.ID')
+                .join('users as u2', 'duos.uID2', '=', 'u2.ID')
+                .select('duos.ID as duoID', 'u1.firstname as u1Firstname', 'u1.lastname as u1Lastname', 'u2.firstname as u2Firstname', 'u2.lastname as u2Lastname')
+
+                .then(function(resp) {
+                  console.log(resp);
+                  resp.forEach(function(duo) {
+                    duo.status = null;
+                  });
+
+                  res.json({
+                    success: true,
+                    message: 'Here are a list of potential pairs you can pick from!',
+                    results: resp.concat(pendingDuos)
+                  });
+                });
             });
         });
-    });
+    })
 });
 
 // POST to /find
