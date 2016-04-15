@@ -33,10 +33,10 @@ app.use(cors());
  *  You can also look here for documentation:
  *  @url: http://expressjs.com/en/guide/routing.html#express-router
  */
-app.use('/api/signup', require('./routes/signup'));
-app.use('/api/login', require('./routes/login'));
-app.use('/api/wings', require('./routes/wings'));
-app.use('/api/pairs', require('./routes/pairs'));
+app.use('/api/signup', require('./routes2/signup'));
+app.use('/api/login', require('./routes2/login'));
+app.use('/api/wings', require('./routes2/wings'));
+app.use('/api/pairs', require('./routes2/pairs'));
 
 
 
