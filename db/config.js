@@ -25,12 +25,61 @@ knex.schema.createTableIfNotExists('duos', function (table) {
   table.integer('uID1');
   table.integer('uID2');
   table.string('status');
-  table.string('cwStatus');
-  table.string('imageURL');
   table.foreign('uID1').references('users.ID');
   table.foreign('uID2').references('users.ID');
 }).then(function(){
 	console.log('Duos schema created.');
+});
+
+knex.schema.createTableIfNotExists('duosRej', function (table) {
+  table.increments('ID').primary();
+  table.integer('dID');
+  table.integer('uID1');
+  table.integer('uID2');
+  table.foreign('uID1').references('users.ID');
+  table.foreign('uID2').references('users.ID');
+}).then(function(){
+  console.log('Duos schema created.');
+});
+
+knex.schema.createTableIfNotExists('duosPen', function (table) {
+  table.increments('ID').primary();
+  table.integer('uID1');
+  table.integer('uID2');
+  table.foreign('uID1').references('users.ID');
+  table.foreign('uID2').references('users.ID');
+}).then(function(){
+  console.log('Duos schema created.');
+});
+
+knex.schema.createTableIfNotExists('duosAcc', function (table) {
+  table.increments('ID').primary();
+  table.integer('uID1');
+  table.integer('uID2');
+  table.foreign('uID1').references('users.ID');
+  table.foreign('uID2').references('users.ID');
+}).then(function(){
+  console.log('Duos schema created.');
+});
+
+knex.schema.createTableIfNotExists('duosCurPen', function (table) {
+  table.increments('ID').primary();
+  table.integer('uID1');
+  table.integer('uID2');
+  table.foreign('uID1').references('users.ID');
+  table.foreign('uID2').references('users.ID');
+}).then(function(){
+  console.log('Duos schema created.');
+});
+
+knex.schema.createTableIfNotExists('duosCurAcc', function (table) {
+  table.increments('ID').primary();
+  table.integer('uID1');
+  table.integer('uID2');
+  table.foreign('uID1').references('users.ID');
+  table.foreign('uID2').references('users.ID');
+}).then(function(){
+  console.log('Duos schema created.');
 });
 
 knex.schema.createTableIfNotExists('pairsPending', function (table) {
