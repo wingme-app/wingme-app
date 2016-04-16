@@ -12,7 +12,7 @@ module.controller('FindMatchCtrl', function(Matches) { //as findMatch
 
 	console.log('calling Matches.getMatches');
 	Matches.getMatches().then(function(matches) {
-		console.log('inside of promise response');
+		console.log('inside of get matches : ', matches);
 	  	vm.displayImg = true;
 	  	vm.potentialMatches = matches;
 	}).catch(function(err) {

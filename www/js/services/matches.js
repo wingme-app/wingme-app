@@ -27,7 +27,7 @@ function matches($http, $state, Auth, Config) {
 
     var request = {
       method: 'GET',
-      url: Config.dev.api + '/pairs/' //edit duos on url in backend
+      url: Config.dev.api + '/pairs' //edit duos on url in backend
     };
     
     return $http(Auth.attachToken(request))
@@ -57,11 +57,16 @@ function matches($http, $state, Auth, Config) {
     array.shift();
   }
 
-  function confirmMatch(matchObj){
+  function confirmMatch(ID, pairStatus, submittedStatus){
     var request = {
       method: 'POST',
-      url: Config.dev.api + '/pairs/',
-      data: matchObj
+      url: Config.dev.api + '/pairs',
+      data: {
+        targetDuoID: ID,
+        pairStatus: pairStatus,
+        submittedStatus: submittedStatus
+
+      }
     };
     
     return $http(Auth.attachToken(request))
@@ -73,6 +78,7 @@ function matches($http, $state, Auth, Config) {
       return response.config.data;
     }
     function error(response){
+      console.log('error in accept duo: ', response);
       // console.log('this is the response line 70 error, ', response);
     }
   }
