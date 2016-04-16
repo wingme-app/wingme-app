@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var cors = require('cors');
+var config = require('./modules/config');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -41,7 +42,7 @@ app.use('/api/pairs', require('./routes2/pairs'));
 
 
 
-var port = 9000;
-app.listen(port, function () {
-  console.log('Dummy API is available at http://localhost:', port);
+var port = config.port;
+app.listen(config.port, function () {
+  console.log('The server is available at http://localhost:', port);
 });
