@@ -72,7 +72,7 @@ function insertInto(table, dID1, dID2) {
 function removePairFrom(table, dID1, dID2) {
   return knex(table)
     .whereIn('dID1', [dID1, dID2])
-    .whereIn('dID2', [did1, dID2])
+    .whereIn('dID2', [dID1, dID2])
     .del()
     .then(function() {
       return; // forces query to run
