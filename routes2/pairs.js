@@ -5,6 +5,8 @@ var hp = require('../modules/helpers');
 var db = require('../modules/pairHelpers');
 var config = require('../modules/config');
 
+var getRandomImage = imageGenerator();
+
 /**
  *  router/wings.js
  *
@@ -26,11 +28,6 @@ function getPairs(req, res) {
   var result = [];
   var pairs = {};
 
-  console.log('request to getPairs');
-  console.log('clientID = ', clientID);
-  console.log('clientUsername = ', clientUsername);
-  console.log('=======');
-
   db.getDuoID(clientID).then(function(clientDuoID) {
     step1(clientDuoID);
   });
@@ -38,7 +35,6 @@ function getPairs(req, res) {
   function step1(clientDuoID) {
     // step 1: find all pairs that the client has requested, has been requested, or has mutually approved.
     db.getAllPairsOf(clientDuoID).then(function(resp) {
-      console.log('inside of step 1. clientDuoID = ', clientDuoID);
 
       // this filters the pairs into relevant duoIDs
       resp.forEach(function(pair) {
@@ -75,30 +71,27 @@ function getPairs(req, res) {
       duos = resp.map(function(duo) {
         // duoID is key
         duo.status = pairs[duo.duoID].status;
-        duo.imageURL = duo.imageURL || config.hostname + ':' + config.port + '/' + config.public + '/images/cute-dog-and-cat-4.gif'
+        duo.imageURL = duo.imageURL || getRandomImage();
         return duo;
       });
       result = result.concat(duos);
 
       step3(clientDuoID);
     });
+
   }
 
   // get random duos, but filter the ones that were already found from pairs
   function step3(clientDuoID) {
-    console.log('inside of step 3');
 
     db.getAllDuos(clientID).then(function(duos) {
-      console.log('pairs = ', pairs);
 
       var randomDuos = [];
       duos.forEach(function(duo) {
-        console.log('pairs[duo.duoID] = ', pairs[duo.duoID]);
-        console.log('duo.duoID = ', duo.duoID);
-        console.log('clientDuoID = ', clientDuoID);
         if (!pairs[duo.duoID] && duo.duoID !== clientDuoID) {
           duo.status = null;
-          console.log('pushing duo. duo = ', duo);
+          duo.imageURL = duo.imageURL || getRandomImage();
+          console.log(duo.imageURL);
           randomDuos.push(duo);
         }
       })
@@ -143,6 +136,22 @@ function postPairs(req, res) {
         hp.sendJSON(res, true, 'You\'ve rejected their match request!');
       });
     }
+  }
+}
+
+/**
+ *  Helper Functions
+ *
+ */
+function imageGenerator() {
+  var options = ['./img/dog-kitten.jpg', './img/cute-dog-and-cat-4.gif', './img/cat-and-dog-friends-001.jpg']
+  var count = 0;
+
+  return function() {
+    if (++count === 3) {
+      count = 0;
+    }
+    return options[count];
   }
 }
 
