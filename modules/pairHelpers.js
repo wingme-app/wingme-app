@@ -1,3 +1,5 @@
+var knex = require('../db');
+
 function getPair(dID1, dID2) {
   return knex('pairs')
     .whereIn('dID1', [dID1, dID2])
@@ -13,7 +15,7 @@ function getPair(dID1, dID2) {
 }
 
 function getDuoID(uID) {
-  knex('duos')
+  return knex('duos')
     .where({
       status: 'duosCurAcc',
       uID1: uID
@@ -24,25 +26,23 @@ function getDuoID(uID) {
     })
     .select('ID')
     .then(function(resp) {
+      console.log('resp.length = ', resp.length);
       if (resp.length) {
-        return resp[0];
+        return resp[0].ID;
+        console.log('inside of getDuoID. resp[0] = ', resp[0]);
       } else {
         throw 'couldn\'t find a duoID for clientID: ' + uID;
       }
     });
 }
 
-function getAllPairsOf(uID) {
-  return new Promise(function(resolve, reject) {
-    getDuoID(uID).then(function(dID){
-      return knex('pairs')
-        .where('dID1', dID)
-        .orWhere('dID2', dID)
-        .then(function(resp) {
-          resolve(resp, dID);
-        });
-    })
-  });
+function getAllPairsOf(dID) {
+  return knex('pairs')
+    .where('dID1', dID)
+    .orWhere('dID2', dID)
+    .then(function(resp) {
+      return resp;
+    });
 }
 
 function updateStatus(status, dID1, dID2) {
@@ -89,7 +89,7 @@ function getUsersOf(duoIDs) {
   // expects duoIDs to be an array
   // returns duoID, duoImage, firstnames, and lastnames
   return knex('duos as d')
-    .whereIn('ID', duoIDs)
+    .whereIn('d.ID', duoIDs)
     .join('users as u1', 'd.uID1', 'u1.ID')
     .join('users as u2', 'd.uID2', 'u2.ID')
     .select('d.ID as duoID',
