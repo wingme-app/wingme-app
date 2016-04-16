@@ -3,119 +3,126 @@ var router = express.Router();
 var auth = require('../modules/auth');
 var hp = require('../modules/helpers');
 var pair = require('../modules/pairHelpers');
+var config = require('../modules/config');
 
-// we'll want to load the database module (knex) to make queries
-var knex = require('../db/config').knex;
+/**
+ *  router/wings.js
+ *
+ *  API endpint: /api/wings
+ *
+ */
+router.get('/', getPairs);
+router.post('/', postPairs);
 
-// statuses: 'rejected', 'null', 'pending', 'accepted'
-
-// API endpoint: /api/pairs/
-
-// GET to /find
-router.get('/find', function(req, res) {
+/**
+ *  POST to /api/pairs/
+ *  
+ */
+function getPairs(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientID = tokenObj.ID;
   var clientUsername = tokenObj.username;
 
-});
+  var result = [];
+  var pairs = {};
 
-// POST to /find
-router.post('/find', function(req, res) {
+  // step 1: find all pairs that the client has requested, has been requested, or has mutually approved.
+  db.getAllPairsOf(clientID).then(function(resp, clientDuoID) {
+
+    // this filters the pairs into relevant duoIDs
+    resp.forEach(function(pair) {
+      var wasFirst = pair.dID1 === clientDuoID
+      var targetDuoID = wasFirst ? pair.dID2 : pair.dID1;
+
+      if (pair.status === 'pairsAccepted') {
+        pair.status = 'isPair';
+
+      } else if (pair.status === 'pairsPending') {
+        pair.status = wasFirst ? 'pendingPair' : 'bePendingPair';
+
+      } else if (pair.status === 'pairsRejected') {
+        pair.status = 'rejected';
+
+      } else {
+        throw 'Inside of pairs.map. unexpected status value. pair.status = ' + pair.status;
+      }
+
+      delete pair.dID1;
+      delete pair.dID2;
+      pair.duoID = targetDuoID;
+      pairs[pair.duoID] = pair;
+    });
+
+    step2();
+  });
+
+  // convert the other duos into user info and duo images
+  function step2() {
+    db.getUsersOf(Object.keys(pairs)).then(function(resp) {
+      duos = resp.map(function(duo) {
+        // duoID is key
+        duo.status = pairs[duo.duoID].status;
+        duo.imageURL = duo.imageURL || config.hostname + ':' + config.port + '/' + config.public + '/images/cute-dog-and-cat-4.gif'
+        return duo;
+      });
+      result = result.concat(duos);
+
+      step3();
+    });
+  }
+
+  // get random duos, but filter the ones that were already found from pairs
+  function step3() {
+    db.getAllDuos(clientID).then(function(duos) {
+      var randomDuos = [];
+      duos.forEach(function(duo) {
+        if (!pairs[duo.duoID]) {
+          duo.status = null;
+          randomDuos.push(duo);
+        }
+      })
+      result = result.concat(randomDuos);
+
+      hp.sendJSON(res, true, 'Here are all of your duos', result);
+    });
+  }
+} 
+
+/**
+ *  POST to /api/pairs/
+ *  
+ */
+function postPairs(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientID = tokenObj.ID;
   var clientUsername = tokenObj.username;
 
   var targetDuoID = req.body.targetDuoID;
-  var status = req.body.accepted; // true or false
+  var pairStatus = req.body.targetStatus; // bePendingPair or null
+  var submittedStatus = req.body.accepted; // true or false
 
-});
-
-
-router.get('/myMatches', function(req, res) {
-  var tokenObj = auth.decode(req.headers['x-access-token']);
-  var clientID = tokenObj.ID;
-  var clientUsername = tokenObj.username;
-
-  // dummy ID: remove this for non-testing.
-  var clientDuoID = 1;
-  // ---
-
-  var result = [];
-
-  findPendingPairsOf(clientDuoID).then(function(resp) {
-
-    resp.forEach(function(duo) {
-      duo.status = "pending"
-    });
-    result = result.concat(resp);
-
-    findAcceptedPairsOf(clientDuoID).then(function(resp) {
-
-      resp.forEach(function(duo) {
-        duo.status = "accepted"
-      });
-      result = result.concat(resp);
-
-      hp.sendJSON(res, true, 'Enjoy your accepted/pending pair list!', result);
-    });
+  db.getDuoID(clientID).then(function(resp) {
+    acceptOrReject(resp[0].ID)
   });
-});
 
+  function acceptOrReject(clientDuoID) {
 
-function findPendingPairsOf(clientDuoID) {
-
-  // query for matches that this duo belongs to
-  return knex('pairsPending as p')
-    .where('p.dID1', clientDuoID)
-    .join('duos as d', 'p.dID2', 'd.ID')
-    .where('d.cwStatus', 'accepted')
-    .join('users as u1', 'd.uID1', 'u1.ID')
-    .join('users as u2', 'd.uID2', 'u2.ID')
-    .select('d.ID as duoID', 'u1.ID as u1ID', 'u2.ID as u2ID',
-            'u1.firstname as u1Firstname', 'u1.lastname as u1Lastname',
-            'u2.firstname as u2Firstname', 'u2.lastname as u2Lastname');
-}
-
-function findAcceptedPairsOf(clientDuoID) {
-
-  return knex('pairsAccepted as p')
-    .where('p.dID1', clientDuoID)
-    .orWhere('p.dID2', clientDuoID)
-    .join('duos as d1', 'p.dID1', 'd1.ID')
-    .join('duos as d2', 'p.dID2', 'd2.ID')
-    .select('p.ID as pairID', 'd1.ID as duoID1', 'd2.ID as duoID2')
-    .then(function(resp) {
-      // we have a list of accepted pairs and duplicates of clientDuoID
-
-      var allAcceptedDuoIDs = resp.map(function(pair){
-        if (pair.duoID1 !== clientDuoID) {
-          return pair.duoID1;
-        } else {
-          return pair.duoID2;
-        }
+    if (submittedStatus && pairStatus) {
+      db.movePair('pairsPending', 'pairsAccepted', clientDuoID, targetDuoID).then(function() {
+        hp.sendJSON(res, true, 'You\'ve accepted their match request!');
       });
 
-      return knex('duos as d')
-        .whereIn('d.ID', allAcceptedDuoIDs)
-        .join('users as u1', 'd.uID1', 'u1.ID')
-        .join('users as u2', 'd.uID2', 'u2.ID')
-        .select('d.ID as duoID', 'u1.ID as u1ID', 'u2.ID as u2ID',
-                'u1.firstname as u1Firstname', 'u1.lastname as u1Lastname',
-                'u2.firstname as u2Firstname', 'u2.lastname as u2Lastname');
-    });
-}
+    } else if (submittedStatus) {
+      db.insertNewPair(clientDuoID, targetDuoID).then(function() {
+        hp.sendJSON(res, true, 'You\'ve sent them a match request.');
+      });
 
-function sendJSON(res, success, message, results) {
-  var response = {
-    success: success,
-    message: message
+    } else {
+      db.movePair('pairsPending', 'pairsRejected', clientDuoID, targetDuoID).then(function() {
+        hp.sendJSON(res, true, 'You\'ve rejected their match request!');
+      });
+    }
   }
-
-  if (results) {
-    response.results = results;
-  }
-
-  res.json(response);
 }
 
 module.exports = router;

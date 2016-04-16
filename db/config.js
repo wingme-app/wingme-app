@@ -82,11 +82,31 @@ knex.schema.createTableIfNotExists('duosCurAcc', function (table) {
   console.log('Duos schema created.');
 });
 
-knex.schema.createTableIfNotExists('pairsPending', function (table) {
+knex.schema.createTableIfNotExists('pairs', function (table) {
   table.increments('ID').primary();
   table.integer('dID1');
   table.integer('dID2');
   table.string('status');
+  table.foreign('dID1').references('duos.ID');
+  table.foreign('dID2').references('duos.ID');
+}).then(function(){
+  console.log('Pairs schema created.');
+});
+
+knex.schema.createTableIfNotExists('pairsRejected', function (table) {
+  table.increments('ID').primary();
+  table.integer('dID1');
+  table.integer('dID2');
+  table.foreign('dID1').references('duos.ID');
+  table.foreign('dID2').references('duos.ID');
+}).then(function(){
+  console.log('Pairs schema created.');
+});
+
+knex.schema.createTableIfNotExists('pairsPending', function (table) {
+  table.increments('ID').primary();
+  table.integer('dID1');
+  table.integer('dID2');
   table.foreign('dID1').references('duos.ID');
   table.foreign('dID2').references('duos.ID');
 }).then(function(){
@@ -97,7 +117,6 @@ knex.schema.createTableIfNotExists('pairsAccepted', function (table) {
   table.increments('ID').primary();
   table.integer('dID1');
   table.integer('dID2');
-  table.string('status');
   table.foreign('dID1').references('duos.ID');
   table.foreign('dID2').references('duos.ID');
 }).then(function(){

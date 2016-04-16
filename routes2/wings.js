@@ -48,7 +48,10 @@ function postAdd(req, res) {
       if (duo) {
         var status = realStatus(duo, clientID);
 
-        if (status === 'isWing' || status === 'pendingCurrentWing' || status === 'beCurrentWing') {
+        if (status === 'isWing' ||
+            status === 'pendingCurrentWing' ||
+            status === 'beCurrentWing' ||
+            status === 'isCurrentWing') {
           hp.sendJSON(res, false, 'You are already wings with ' + wingToAdd + '!');
 
         } else if (status === 'pendingWing') {
@@ -63,7 +66,7 @@ function postAdd(req, res) {
           });
 
         } else {
-          throw 'something went wrong. status = ' + status;
+          throw 'something went wrong. Inside of processInfo() of wings.js. status = ' + status;
         }
 
       // if duo does not exist
