@@ -27,7 +27,7 @@ module.controller('WingRequestsCtrl', function(Wings) {
     .then(function(currentWings) {
       console.log('data from getWings', currentWings);
       // handles current wing
-      vm.currentWingsReceived = currentWings.filter(function(user){
+      vm.currentWing = currentWings.filter(function(user){
         return user.status === "isCurrentWing";
       });
 

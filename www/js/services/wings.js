@@ -15,7 +15,7 @@ function wings($http, $state, Config, Auth) {
     updateWing: updateWing, // post wing to /api/wings/requests
     addWingPost: addWingPost,
     currentWingReq: currentWingReq,
-    currentWingPResp: currentWingResp
+    currentWingResp: currentWingResp
   };
 
   // ------------
