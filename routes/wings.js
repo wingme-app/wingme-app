@@ -105,8 +105,11 @@ router.get('/wingRequests', function(req, res) {
         var entry = storage[targetID] || {};
         storage[targetID] = entry;
         entry[relationship] = [duo.status, duo.cwStatus];
-      }); 
 
+      }); 
+      console.log(storage);
+
+      
       knex('users')
         .whereIn('ID', Object.keys(storage))
         .select('ID', 'firstname', 'lastname')

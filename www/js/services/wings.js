@@ -13,7 +13,9 @@ function wings($http, $state, Config, Auth) {
   return {
     getWings: getWings, // gets all wings from /api/wings/requests
     updateWing: updateWing, // post wing to /api/wings/requests
-    addWingPost: addWingPost
+    addWingPost: addWingPost,
+    currentWingReq: currentWingReq,
+    currentWingPResp: currentWingResp
   };
 
   // ------------
@@ -23,10 +25,10 @@ function wings($http, $state, Config, Auth) {
     var request = {
       method: 'GET',
       url: Config.dev.api + '/wings/wingRequests'
-    }
+    };
 
     return $http(Auth.attachToken(request))
-      .then(success, error)
+      .then(success, error);
 
     // -----------------
     // request callbacks
@@ -51,14 +53,14 @@ function wings($http, $state, Config, Auth) {
     }
   }
 
-  function updateWing(userID, index, status) {
+  function updateWing(userID, status) {
     // index is the position inside of the array of wings given to us in the get request.
 
     var request = {
       method: 'POST',
       url: Config.dev.api + '/wings/wingRequests',
       data: {
-        "targetID" : userID,
+        "targetID" : userID, 
         "accepted" : status
       }
     };
@@ -71,6 +73,58 @@ function wings($http, $state, Config, Auth) {
 
     function success(response) {
       console.log(response);
+    }
+
+    function error(response) {
+      // TODO: error handling
+    }
+  }
+
+  function currentWingReq(userID, status) {
+
+    var request = {
+      method: 'POST',
+      url: Config.dev.api + '/wings/current', //change
+      data: {
+        "targetID" : userID, 
+        "accepted" : status
+      }
+    };
+
+    $http(Auth.attachToken(request))
+      .then(success, error);
+
+    // -----------------
+    // request callbacks
+
+    function success(response) {
+      console.log('accepted CW req ', response);
+    }
+
+    function error(response) {
+      // TODO: error handling
+    }
+  }
+
+  function currentWingResp(userID, status) {
+
+    var request = {
+      method: 'POST',
+      url: Config.dev.api + '/wings/current', //change
+      data: {
+        "targetID" : userID, 
+        "accepted" : status
+      }
+    };
+
+    $http(Auth.attachToken(request))
+      .then(success, error);
+
+    // -----------------
+    // request callbacks
+
+    function success(response) {
+      console.log('accepted CW req ', response);
     }
 
     function error(response) {
