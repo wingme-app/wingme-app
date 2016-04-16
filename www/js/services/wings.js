@@ -84,7 +84,7 @@ function wings($http, $state, Config, Auth) {
 
     var request = {
       method: 'POST',
-      url: Config.dev.api + '/wings/current', //change
+      url: Config.dev.api + '/wings/addCurrent', //change
       data: {
         "targetID" : userID, 
         "accepted" : status

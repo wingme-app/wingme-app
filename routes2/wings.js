@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-// var auth = require('../modules/auth');
 var auth = require('../modules/auth');
 var hp = require('../modules/helpers');
 var db = require('../modules/duoHelpers.js');
@@ -18,24 +17,18 @@ router.post('/add', function(req, res) {
   var wingToAdd = req.body.wingToAdd;
   var targetID;
 
-  checkUsername();
+  db.getUser(wingToAdd).then(function(user) {
+    if (!user.length) {
+      hp.sendJSON(res, false, 'That username does not exist!');
 
-  function checkUsername() {
-    db.getUser(wingToAdd)
-      .then(function(user) {
+    } else if (user[0].ID === clientID) {
+      hp.sendJSON(res, false, 'You can\'t add yourself as a wing!');
 
-        if (!user.length) {
-          hp.sendJSON(res, false, 'That username does not exist!');
-
-        } else if (user[0].ID === clientID) {
-          hp.sendJSON(res, false, 'You can\'t add yourself as a wing!');
-
-        } else {
-          targetID = user[0].ID;
-          processInfo();
-        }
-      })
-  }
+    } else {
+      targetID = user[0].ID;
+      processInfo();
+    }
+  });
 
   function processInfo() {
     db.getDuo(null, clientID, targetID).then(function(resp) {
@@ -105,26 +98,35 @@ router.post('/wingRequests', function(req, res) {
   var targetID = req.body.targetID;
   var submittedStatus = req.body.accepted;
 
-  db.getDuo(null, clientID, targetID).then(function(resp) {
-    var duo = resp[0];
-    if (duo.status !== 'duosPen') {
-      throw 'Expecting duo.status to equal \'duosPen\'. Instead got ' + duo.status;
+  acceptOrReject(submittedStatus, 'duosPen', clientID, targetID, accept, reject);
 
-    } else {
+  function accept(duo) {
+    db.acceptWing(duo.uID1, duo.uID2).then(function() {
+      hp.sendJSON(res, true, 'You\'ve accepted their Wing Request!');
+    });
+  }
 
-      if (submittedStatus) {
-        db.acceptWing(duo.uID1, duo.uID2).then(function() {
-          hp.sendJSON(res, true, 'You\'ve accepted their wing request!');
-        });
+  function reject(duo) {
+    db.rejectWing(duo.uID1, duo.uID2).then(function() {
+      hp.sendJSON(res, true, 'You\'ve rejected their Wing Request.');
+    })
+  }
 
-      } else {
-        db.rejectWing(duo.uID1, duo.uID2).then(function() {
-          hp.sendJSON(res, true, 'You\'ve rejected their wing request!');
-        });
-      }
-    } // end else
-  });
 });
+
+router.post('/addCurrent', function(req, res) {
+  var tokenObj = auth.decode(req.headers['x-access-token']);
+  var clientID = tokenObj.ID;
+  var targetID = req.body.targetID;
+
+  acceptOrReject(true, 'duosAcc', clientID, targetID, accept);
+
+  function accept(duo) {
+    db.moveDuo('duosAcc', 'duosCurPen', duo.uID1, duo.uID2).then(function() {
+      hp.sendJSON(res, true, 'You\'ve submitted a current wing request!');
+    });
+  }
+})
 
 router.post('/current', function(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
@@ -135,25 +137,41 @@ router.post('/current', function(req, res) {
   // testing
   // var clientID = req.headers.clientid;
 
+  acceptOrReject(submittedStatus, 'duosCurPen', clientID, targetID, accept, reject);
+
+  function accept(duo) {
+    db.acceptCurWing(duo.uID1, duo.uID2).then(function() {
+      hp.sendJSON(res, true, 'You\'ve accepted their currentWing Request!');
+    });
+  }
+
+  function reject(duo) {
+    db.rejectCurWing(duo.uID1, duo.uID2).then(function() {
+      hp.sendJSON(res, true, 'You\'ve rejected their currentWing Request.');
+    });
+  }
+
+}); // end POST to /current
+
+/**
+ *  Helper functions specific to route
+ *
+ */
+function acceptOrReject(submittedStatus, expectedStatus, clientID, targetID, acceptCallback, rejectCallback) {
   db.getDuo(null, clientID, targetID).then(function(resp) {
     var duo = resp[0];
-    if (duo.status !== 'duosCurPen') {
-      throw 'Expecting duo.status to equal \'duosCurPen\'. Instead, got ' + duo.status;
+    if (duo.status !== expectedStatus) {
+      throw 'Expecting duo.status to equal \'' + expectedStatus + '\'. Instead, got ' + duo.status;
 
     } else {
       if (submittedStatus) {
-        db.acceptCurWing(duo.uID1, duo.uID2).then(function() {
-          hp.sendJSON(res, true, 'You\'ve accepted their currentWing Request!');
-        });
+        acceptCallback(duo);
       } else {
-        db.rejectCurWing(duo.uID1, duo.uID2).then(function() {
-          hp.sendJSON(res, true, 'You\'ve rejected their currentWing Request.');
-        })
+        rejectCallback(duo);
       }
     }
   });
-
-}); // end POST to /current
+}
 
 // export router
 module.exports = router;
