@@ -59,6 +59,8 @@ function realStatus(duo, clientID) {
       result = 'isWing';
       break;
     case 'duosCurPen':
+      console.log('duo = ', duo);
+      console.log('clientToTarget = ', clientToTarget);
       result = clientToTarget ? 'pendingCurrentWing' : 'beCurrentWing';
       break;
     case 'duosCurAcc':
