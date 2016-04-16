@@ -37,15 +37,41 @@ function wings($http, $state, Config, Auth) {
 
       console.log('response = ', response);
 
-      var currentWings = [];
+      var wingTypes = {currentWing: [], currentWingsReceived: [],
+        currentWingsSent: [],
+        confirmedWings: [],
+        wingRequestsSent: [],
+        wingRequestsReceived: []
+      };
 
       response.data.results.forEach(function(wing) {
         // we manipulate the current wings variable instead of reassigning the variable.
         // this forces a digest cycle refresh.
-        currentWings.push(wing);
+        console.log('wing: ', wing);
+        if (wing.status === "isCurrentWing"){
+          wingTypes.currentWing.push(wing);
+        }
+        else if (wing.status === "beCurrentWing"){
+          wingTypes.currentWingsReceived.push(wing);
+        }
+        else if (wing.status === "pendingCurrentWing"){
+          wingTypes.currentWingsSent.push(wing);
+        }
+        else if (wing.status === "isWing"){
+          wingTypes.confirmedWings.push(wing);
+        }
+        else if (wing.status === "pendingWing"){
+          wingTypes.wingRequestsSent.push(wing);
+        }
+        else if (wing.status === "bePendingWing"){
+          wingTypes.wingRequestsReceived.push(wing);
+        }
+        else{
+          console.log('unfiltered wing: ', wing);
+        }
       });
 
-      return currentWings;
+      return wingTypes;
     }
 
     function error(response) {
