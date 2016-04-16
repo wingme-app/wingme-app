@@ -1,41 +1,39 @@
 <ion-view view-title="Login" class="auth-page">
   <ion-content class="padding">
-
-    <div class="list list-inset">
-      <label class="item item-input">
-        <input ng-model="login.username" type="text" placeholder="Username">
-      </label>
-      <label class="item item-input">
-        <input ng-model="login.password" type="password" placeholder="Password">
-      </label>
-      <!-- <label class="item item-input item-floating-label">
-        <span class="input-label">Email</span>
-        <input type="text" placeholder="Email">
-      </label> -->
-    </div>
-
-    <div ng-if="login.error" class="row assertive">
-      <div class="col text-center">
-        <p></p>
-        <p>{{login.message}}</p>
+      <div class="list list-inset">
+        <label class="item item-input">
+          <input ng-model="login.username" type="text" placeholder="Username">
+        </label>
+        <label class="item item-input">
+          <input ng-model="login.password" type="password" placeholder="Password">
+        </label>
+        <!-- <label class="item item-input item-floating-label">
+          <span class="input-label">Email</span>
+          <input type="text" placeholder="Email">
+        </label> -->
       </div>
-    </div>
 
-    <button ng-click="login.login(login.username, login.password)" class="button button-block button-positive">
-      Login
-    </button>
-
-    <div class="row">
-      <div class="col text-center">
-        <p></p>
-        <p>Don't have an account?</p>
+      <div ng-if="login.error" class="row assertive">
+        <div class="col text-center">
+          <p></p>
+          <p>{{login.message}}</p>
+        </div>
       </div>
-    </div>
 
-    <button ng-click="login.redirectToSignup()" class="button button-block button-balanced">
-      Sign Up
-    </button>
+      <button ng-click="login.login(login.username, login.password)" class="button button-block button-positive">
+        Login
+      </button>
 
+      <div class="row">
+        <div class="col text-center">
+          <p></p>
+          <p>Don't have an account?</p>
+        </div>
+      </div>
+
+      <button ng-click="login.redirectToSignup()" class="button button-block button-balanced">
+        Sign Up
+      </button>
 
   </ion-content>
 </ion-view>
