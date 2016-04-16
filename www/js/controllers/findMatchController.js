@@ -24,8 +24,8 @@ module.controller('FindMatchCtrl', function(Matches) { //as findMatch
 
 	// fired when ACCEPT match button click
 
-	vm.confirmMatch = function(obj){
-		Matches.confirmMatch(obj).then(function(response){
+	vm.confirmMatch = function(ID, pairStatus, submittedStatus){
+		Matches.confirmMatch(ID, pairStatus, submittedStatus).then(function(response){
 			console.log('then resp', response);
 			Matches.nextMatch(vm.potentialMatches);
 		});

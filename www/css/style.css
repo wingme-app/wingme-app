@@ -1,0 +1,46 @@
+/* Empty. Add your own CSS if you like */
+
+body {
+  color: #333745;
+}
+
+body, .pane, .view {
+  background-color: #DAEDE2;
+}
+
+.potential-match {
+  width: 100%;
+}
+
+.float-right {
+  float: right;
+  top: -20px;
+}
+
+
+.auth-page {
+  /*background-color: #3E8791;*/
+}
+
+.bar.bar-stable {
+  background-color: #77C4D3;
+  border: none;
+}
+
+.bar.bar-stable .title {
+  color: #fff;
+}
+
+/**
+ *
+ * Buttons
+ *
+ */
+ 
+.button.button-positive {
+  background-color: #90B8CC;
+}
+
+.button.button-balanced {
+  background-color: #EA2E49;
+}

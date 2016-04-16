@@ -115,8 +115,8 @@ function postPairs(req, res) {
   var pairStatus = req.body.targetStatus; // bePendingPair or null
   var submittedStatus = req.body.accepted; // true or false
 
-  db.getDuoID(clientID).then(function(resp) {
-    acceptOrReject(resp[0].ID)
+  db.getDuoID(clientID).then(function(ID) {
+    acceptOrReject(ID)
   });
 
   function acceptOrReject(clientDuoID) {
