@@ -40,9 +40,6 @@ app.use('/api/wings', require('./routes2/wings'));
 app.use('/api/pairs', require('./routes2/pairs'));
 
 
-
-
-var port = config.port;
 app.listen(config.port, function () {
-  console.log('The server is available at http://localhost:', port);
+  console.log('The server is available at http://localhost:', config.port);
 });

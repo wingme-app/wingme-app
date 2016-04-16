@@ -10,9 +10,13 @@ module.controller('FindMatchCtrl', function(Matches) { //as findMatch
 
 	vm.displayImg = false;
 
+	console.log('calling Matches.getMatches');
 	Matches.getMatches().then(function(matches) {
+		console.log('inside of promise response');
 	  	vm.displayImg = true;
 	  	vm.potentialMatches = matches;
+	}).catch(function(err) {
+		console.error(err);
 	}); 
 	//this will only occur on first click of find match --> add for later clicks later
 

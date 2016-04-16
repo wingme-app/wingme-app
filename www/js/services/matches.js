@@ -23,6 +23,8 @@ function matches($http, $state, Auth, Config) {
   // ------------
 
   function getMatches(){
+    console.log('inside of getMatches');
+
     var request = {
       method: 'GET',
       url: Config.dev.api + '/pairs/' //edit duos on url in backend
@@ -47,7 +49,7 @@ function matches($http, $state, Auth, Config) {
 
     function error(response) {
       // TODO: error handling 
-      console.log('error in getMatches ', response );
+      console.log('error in getMatches ', response);
     }
   } //end of getMatches() function
 

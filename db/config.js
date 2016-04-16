@@ -25,6 +25,7 @@ knex.schema.createTableIfNotExists('duos', function (table) {
   table.integer('uID1');
   table.integer('uID2');
   table.string('status');
+  table.string('imageURL');
   table.foreign('uID1').references('users.ID');
   table.foreign('uID2').references('users.ID');
 }).then(function(){
