@@ -7,7 +7,6 @@ module.controller('WingRequestsCtrl', function(Wings) {
   var vm = this;
 
   // data
-
   vm.allWingRequests = [];
   vm.wingRequestsSent = [];
   vm.wingRequestsReceived = [];
@@ -17,50 +16,24 @@ module.controller('WingRequestsCtrl', function(Wings) {
   vm.currentWing = [];
 
   // methods
-  
   vm.updateWing = Wings.updateWing;
   vm.beCurrentWing = Wings.currentWingReq;
   vm.currentWingResp = Wings.currentWingResp;
 
-
   Wings.getWings()
-    .then(function(currentWings) {
-      console.log('data from getWings', currentWings);
-      // handles current wing
-      vm.currentWing = currentWings.filter(function(user){
-        return user.status === "isCurrentWing";
-      });
+    .then(function(wings) {
+      console.log('data from getWings', wings);
+      vm.currentWing = wings.currentWing;
 
-      // handles current wings received
-      vm.currentWingsReceived = currentWings.filter(function(user){
-        return user.status === "beCurrentWing";
-      });
+      vm.currentWingsReceived = wings.currentWingsReceived;
 
-      // handles Current Wings Sent
-      vm.currentWingsSent = currentWings.filter(function(user){
-        return user.status === "pendingCurrentWing";
-      });
+      vm.currentWingsSent = wings.currentWingsSent;
 
-      // handles confirmed wing requests
-      vm.confirmedWings = currentWings.filter(function(user){
-        return user.status === "isWing";
-      });
-      // handles wing requests that have been sent      
-      vm.wingRequestsSent = currentWings.filter(function(user) {
-        return user.status === "pendingWing";
-      });
-      // handle wing requests that have been received
-      vm.wingRequestsReceived = currentWings.filter(function(user){
-        return user.status === "bePendingWing";
-      });
+      vm.confirmedWings = wings.confirmedWings;
 
-      vm.currentWingReq = currentWings.filter(function(user){
-        return user.status === "bePendingWing";
-      });
-      // combination of all wing requests
-      vm.allWingRequests = currentWings;
-      console.log('CWs Sent: ', vm.currentWingsSent);
-      console.log('CWs Received: ', vm.currentWingsReceived);
+      vm.wingRequestsSent = wings.wingRequestsSent;
+
+      vm.wingRequestsReceived = wings.wingRequestsReceived;
     });
 
   vm.remove = function(chat) {
