@@ -1,0 +1,2 @@
+rm data/dummy-db.sqlite
+node db/makeData.js
