@@ -195,6 +195,8 @@ module.exports = {
   newDuoEntry: newDuoEntry,
   acceptWing: acceptWing,
   rejectWing: rejectWing,
+  acceptCurWing: acceptCurWing,
+  rejectCurWing: rejectCurWing,
   insertDuoInto: insertDuoInto,
   swapUserIDs: swapUserIDs
 }

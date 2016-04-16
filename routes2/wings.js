@@ -8,9 +8,19 @@ var db = require('../modules/duoHelpers.js');
  *  router/wings.js
  *
  *  API endpint: /api/wings
+ *
  */
+router.post('/add', postAdd);
+router.get('/wingRequests', getWingRequests);
+router.post('/wingRequests', postWingRequests);
+router.post('/addCurrent', postAddCurrent);
+router.post('/current', postCurrent);
 
-router.post('/add', function(req, res) {
+/**
+ *  POST to /api/wings/add
+ *  
+ */
+function postAdd(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientID = tokenObj.ID;
   var clientUsername = tokenObj.username;
@@ -36,7 +46,7 @@ router.post('/add', function(req, res) {
 
       // if client<->target exists
       if (duo) {
-        var status = hp.realStatus(duo, clientID);
+        var status = realStatus(duo, clientID);
 
         if (status === 'isWing' || status === 'pendingCurrentWing' || status === 'beCurrentWing') {
           hp.sendJSON(res, false, 'You are already wings with ' + wingToAdd + '!');
@@ -66,9 +76,13 @@ router.post('/add', function(req, res) {
 
   } // end processInfo
 
-}); // end POST to /add
+} // end POST to /add
 
-router.get('/wingRequests', function(req, res) {
+/**
+ *  GET to /api/wings/wingRequests
+ *
+ */
+function getWingRequests(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientID = tokenObj.ID;
   var clientUsername = tokenObj.username;
@@ -78,11 +92,11 @@ router.get('/wingRequests', function(req, res) {
   db.getAllDuosOf(clientID).then(function(resp) {
     var users = resp.map(function(duo) {
       // grab a more specific status to pass to client
-      var statusForClient = hp.realStatus(duo, clientID);
+      var statusForClient = realStatus(duo, clientID);
       var user;
 
       // format the user to be front-end friendly
-      user = hp.filterDuo(duo, clientID);
+      user = filterDuo(duo, clientID);
       user.status = statusForClient;
       return user;
     });
@@ -90,9 +104,13 @@ router.get('/wingRequests', function(req, res) {
     hp.sendJSON(res, true, 'Here are all of your wings!', results.concat(users));
   });
 
-}); // end GET to /wingRequests
+} // end GET to /wingRequests
 
-router.post('/wingRequests', function(req, res) {
+/**
+ *  POST to /api/wings/wingRequests
+ *
+ */
+function postWingRequests(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientID = tokenObj.ID;
   var targetID = req.body.targetID;
@@ -112,9 +130,13 @@ router.post('/wingRequests', function(req, res) {
     })
   }
 
-});
+}; // end POST to /wingRequests
 
-router.post('/addCurrent', function(req, res) {
+/**
+ *  POST to /api/wings/addCurrent
+ *
+ */
+function postAddCurrent(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientID = tokenObj.ID;
   var targetID = req.body.targetID;
@@ -141,9 +163,13 @@ router.post('/addCurrent', function(req, res) {
       counter.plus();
     });
   }
-});
+} // end POST to /addCurrent
 
-router.post('/current', function(req, res) {
+/**
+ *  POST to /api/wings/current
+ *
+ */
+function postCurrent(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
   var clientID = tokenObj.ID;
   var targetID = req.body.targetID;
@@ -166,7 +192,7 @@ router.post('/current', function(req, res) {
     });
   }
 
-}); // end POST to /current
+} // end POST to /current
 
 /**
  *  Helper functions specific to route
@@ -186,6 +212,56 @@ function acceptOrReject(submittedStatus, expectedStatus, clientID, targetID, acc
       }
     }
   });
+}
+
+// Generate a 'real' status: something that reveals who gave consent first in a pending relationship.
+function realStatus(duo, clientID) {
+  // boolean, if the client is the first user (uID1) in our duos join table.
+  var clientToTarget = duo.u1ID === clientID || duo.uID1 === clientID;
+  var statusInDatabase = duo.status;
+  var result;
+
+  switch (statusInDatabase) {
+    case 'duosPen':
+      result = clientToTarget ? 'pendingWing' : 'bePendingWing';
+      break;
+    case 'duosAcc':
+      result = 'isWing';
+      break;
+    case 'duosCurPen':
+      console.log('duo = ', duo);
+      console.log('clientToTarget = ', clientToTarget);
+      result = clientToTarget ? 'pendingCurrentWing' : 'beCurrentWing';
+      break;
+    case 'duosCurAcc':
+      result = 'isCurrentWing';
+      break;
+    case 'duosRej':
+      result = 'rejected';
+      break;
+    default:
+      throw 'status invalid! duo = ' + duo;
+  }
+
+  return result;
+}
+
+// Filter out the current user from a duo.
+function filterDuo(duo, clientID) {
+ // keep it pure
+ var newUser = {};
+
+ if (duo.u1ID === clientID) {
+   newUser.ID = duo.u2ID;
+   newUser.firstname = duo.u2fn;
+   newUser.lastname = duo.u2ln;
+ } else {
+   newUser.ID = duo.u1ID;
+   newUser.firstname = duo.u1fn;
+   newUser.lastname = duo.u1ln;
+ }
+
+ return newUser;
 }
 
 // export router
