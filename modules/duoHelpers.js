@@ -113,7 +113,7 @@ function insertDuoInto(table, uID1, uID2) {
   }).then(function(resp) {
     console.log('inserted users ' + uID1 + ' ' + uID2 + ' into ' + table + '. entry ID = ' + resp[0]);
     return updateStatus(table, uID1, uID2).then(function() {
-      'status updated inside of ' + table + ' for ' + uID1 + ' and ' + uID2;
+      console.log('status updated inside of ' + table + ' for ' + uID1 + ' and ' + uID2);
     })
   });
 }
@@ -150,6 +150,21 @@ function updateStatus(newStatus, uID1, uID2) {
   });
 }
 
+function swapUserIDs(duoID) {
+  console.log('duoID = ', duoID);
+  return getDuo(duoID).then(function(resp) {
+    console.log('resp = ', resp);
+    var uID1 = resp[0].uID1;
+    var uID2 = resp[0].uID2;
+    return knex('duos').where('ID', duoID).update({
+      uID1: uID2,
+      uID2: uID1
+    }).then(function(resp) {
+      return; // forces the query to run.
+    });
+  })
+}
+
 function acceptWing(uID1, uID2) {
   return moveDuo('duosPen', 'duosAcc', uID1, uID2);
 }
@@ -179,5 +194,7 @@ module.exports = {
   getAllDuosOf: getAllDuosOf,
   newDuoEntry: newDuoEntry,
   acceptWing: acceptWing,
-  rejectWing: rejectWing
+  rejectWing: rejectWing,
+  insertDuoInto: insertDuoInto,
+  swapUserIDs: swapUserIDs
 }

@@ -4,3 +4,8 @@ knex('duos').then(function(resp) {
   console.log('duos = ', resp);
   console.log('====================================')
 });
+
+knex('duosCurPen').then(function(resp) {
+  console.log('duos = ', resp);
+  console.log('====================================')
+})

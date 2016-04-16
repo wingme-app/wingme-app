@@ -1,2 +1,3 @@
 rm data/dummy-db.sqlite
+cp data/dummy-db.sqlite2 data/dummy-db.sqlite
 node db/makeData.js

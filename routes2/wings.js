@@ -122,11 +122,26 @@ router.post('/addCurrent', function(req, res) {
   acceptOrReject(true, 'duosAcc', clientID, targetID, accept);
 
   function accept(duo) {
-    db.moveDuo('duosAcc', 'duosCurPen', duo.uID1, duo.uID2).then(function() {
+
+    var counter = new hp.Counter();
+    counter.on(2, function() {
       hp.sendJSON(res, true, 'You\'ve submitted a current wing request!');
     });
+
+    // swap the IDs if necessary
+    if (duo.uID1 !== clientID) {
+      db.swapUserIDs(duo.ID).then(function() {
+        counter.plus();
+      })
+    } else {
+      counter.plus();
+    }
+
+    db.insertDuoInto('duosCurPen', clientID, targetID).then(function() {
+      counter.plus();
+    });
   }
-})
+});
 
 router.post('/current', function(req, res) {
   var tokenObj = auth.decode(req.headers['x-access-token']);
