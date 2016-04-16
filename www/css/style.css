@@ -1,11 +1,35 @@
 /* Empty. Add your own CSS if you like */
 
+body {
+
+}
 
 .potential-match {
-	width: 100%;
+  width: 100%;
 }
 
 .float-right {
-	float: right;
-	top: -20px;
+  float: right;
+  top: -20px;
 }
+
+
+.auth-page {
+  background-color: #7E5791;
+}
+
+.bar.bar-stable {
+  background-color: #5E3F6E;
+  border: none;
+}
+
+.bar.bar-stable .title {
+  color: #fff;
+}
+
+/**
+ *
+ * Buttons
+ *
+ */
+ 
