@@ -5,7 +5,7 @@ body {
 }
 
 body, .pane, .view {
-  background-color: #DAEDE2;
+  background-color: #FFF;
 }
 
 .potential-match {
@@ -23,12 +23,13 @@ body, .pane, .view {
 }
 
 .bar.bar-stable {
-  background-color: #77C4D3;
+  background-color: #5BC9BC;
   border: none;
 }
 
 .bar.bar-stable .title {
   color: #fff;
+  font-weight: 700;
 }
 
 /**
@@ -38,9 +39,63 @@ body, .pane, .view {
  */
  
 .button.button-positive {
-  background-color: #90B8CC;
+  background-color: #4FA7FF;
+}
+
+.button.button-positive:active {
+  background-color: #4091E3;
 }
 
 .button.button-balanced {
-  background-color: #EA2E49;
+  background-color: #FF9C71;
+}
+
+.button.button-balanced:active {
+  background-color: #F28657;
+}
+
+.button.button-dark {
+  background-color: #40A397;
+}
+
+.button.button-dark:active {
+  background-color: #379187;
+}
+
+
+/**
+ *
+ * Views
+ *
+ */
+
+.add-wing {
+  /*background-color: #94E0D7;*/
+}
+
+.add-wing .item-input {
+  top: 180px;
+}
+
+.add-wing .item-input input {
+  text-align: center;
+}
+
+.add-wing .button {
+  top: 180px;
+  display: block;
+  margin: auto;
+}
+
+.add-wing .button-positive {
+  font-weight: 700;
+  background-color: #83C7BF;
+  color: #fff;
+  -webkit-box-shadow: 0 3px 0 0 #74B3AB;
+  box-shadow: 0 3px 0 0 #74B3AB;
+}
+
+.add-wing .button-positive:active {
+  background-color: #6FABA4;
+  box-shadow: 0 3px 0 0 #6FABA4;
 }

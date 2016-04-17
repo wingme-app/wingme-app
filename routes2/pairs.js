@@ -111,15 +111,21 @@ function postPairs(req, res) {
   var clientID = tokenObj.ID;
   var clientUsername = tokenObj.username;
 
+  console.log('req.body = ', req.body);
+
   var targetDuoID = req.body.targetDuoID;
-  var pairStatus = req.body.targetStatus; // bePendingPair or null
+  var pairStatus = req.body.pairStatus; // bePendingPair or null
   var submittedStatus = req.body.accepted; // true or false
 
   db.getDuoID(clientID).then(function(ID) {
+    console.log('calling acceptOrReject. ID = ', ID);
     acceptOrReject(ID)
   });
 
   function acceptOrReject(clientDuoID) {
+
+    console.log('submittedStatus = ', submittedStatus);
+    console.log('pairStatus = ', pairStatus);
 
     if (submittedStatus && pairStatus) {
       db.movePair('pairsPending', 'pairsAccepted', clientDuoID, targetDuoID).then(function() {
