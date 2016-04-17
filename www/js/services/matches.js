@@ -31,8 +31,6 @@ function matches($http, $state, Auth, Config) {
   // ------------
 
   function getMatches(){
-    console.log('inside of getMatches');
-
     var request = {
       method: 'GET',
       url: Config.dev.api + '/pairs' //edit duos on url in backend
@@ -44,10 +42,22 @@ function matches($http, $state, Auth, Config) {
     // return currentWings;
 
     function success(response) {
+      matches.potentialMatches = [];
+      matches.pendingMatches = [];
+      matches.confirmedMatches = [];
       response.data.results.forEach(function(match){
-        matches.potentialMatches.push(match);
-        if (match.pairStatus === "pendingPair"){
+        console.log('this is a match: ', match);
+        if (match.status === 'pendingPair'){
           matches.pendingMatches.push(match);
+        }
+        else if (match.status === 'isPair'){
+          matches.confirmedMatches.push(match);
+        }
+        else if (match.status === 'null'){
+          matches.potentialMatches.push(match);
+        }
+        else {
+          console.log('rejected pair');
         }
       });
       return matches;

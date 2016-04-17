@@ -10,7 +10,6 @@ module.controller('FindMatchCtrl', function(Matches) { //as findMatch
 
 	vm.displayImg = false;
 
-	console.log('calling Matches.getMatches');
 	Matches.getMatches().then(function(matches) {
 		console.log('inside of get matches : ', matches);
 	  	vm.displayImg = true;
