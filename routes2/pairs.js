@@ -26,15 +26,14 @@ function getPairs(req, res) {
   var clientUsername = tokenObj.username;
 
   var result = [];
-  var pairs = {};
-
+  var otherDuos = {};
 
   db.getDuoID(clientID).then(function(clientDuoID) {
     step1(clientDuoID);
   });
 
+  // step 1: find all pairs that the client has requested, has been requested, or has mutually approved.
   function step1(clientDuoID) {
-    // step 1: find all pairs that the client has requested, has been requested, or has mutually approved.
     db.getAllPairsOf(clientDuoID).then(function(resp) {
 
       // this filters the pairs into relevant duoIDs
@@ -58,20 +57,20 @@ function getPairs(req, res) {
         delete pair.dID1;
         delete pair.dID2;
         pair.duoID = targetDuoID;
-        pairs[pair.duoID] = pair;
+        otherDuos[pair.duoID] = pair;
       });
 
       step2(clientDuoID);
     });
   }
 
-  // convert the other duos into user info and duo images
+  // step 2: convert the other duos into user info and duo images
   function step2(clientDuoID) {
 
-    db.getUsersOf(Object.keys(pairs)).then(function(resp) {
+    db.getUsersOf(Object.keys(otherDuos)).then(function(resp) {
       duos = resp.map(function(duo) {
         // duoID is key
-        duo.status = pairs[duo.duoID].status;
+        duo.status = otherDuos[duo.duoID].status;
         duo.imageURL = duo.imageURL || getRandomImage();
         return duo;
       });
@@ -82,14 +81,14 @@ function getPairs(req, res) {
 
   }
 
-  // get random duos, but filter the ones that were already found from pairs
+  // step 3: get random duos, but filter out the ones that were already found from pairs
   function step3(clientDuoID) {
 
     db.getAllDuos(clientID).then(function(duos) {
 
       var randomDuos = [];
       duos.forEach(function(duo) {
-        if (!pairs[duo.duoID] && duo.duoID !== clientDuoID) {
+        if (!otherDuos[duo.duoID] && duo.duoID !== clientDuoID) {
           duo.status = null;
           duo.imageURL = duo.imageURL || getRandomImage();
           console.log(duo.imageURL);
@@ -133,7 +132,7 @@ function postPairs(req, res) {
       });
 
     } else {
-      db.movePair('pairsPending', 'pairsRejected', clientDuoID, targetDuoID).then(function() {
+      db.rejectPair(clientDuoID, targetDuoID).then(function() {
         hp.sendJSON(res, true, 'You\'ve rejected their match request!');
       });
     }

@@ -18,14 +18,13 @@ function matches($http, $state, Auth, Config) {
     confirmedMatches: []
   };
 
-
-
   return {
     getMatches: getMatches,// get all possible matches
     viewPotentialMatch: viewPotentialMatch,
     confirmMatch: confirmMatch,
     getMyMatches: getMyMatches,
-    nextMatch: nextMatch
+    nextMatch: nextMatch,
+    matches: matches
   };
 
   // ------------
@@ -56,7 +55,7 @@ function matches($http, $state, Auth, Config) {
           matches.potentialMatches.push(match);
         }
         else {
-          console.log('rejected pair');
+          console.log('in final else, not pair or null. match.status = ', match.status);
         }
       });
       return matches;
@@ -73,14 +72,14 @@ function matches($http, $state, Auth, Config) {
     array.shift();
   }
 
-  function confirmMatch(ID, pairStatus, submittedStatus){
+  function confirmMatch(duo, accepted){
     var request = {
       method: 'POST',
       url: Config.dev.api + '/pairs',
       data: {
-        targetDuoID: ID,
-        pairStatus: pairStatus,
-        accepted: submittedStatus
+        targetDuoID: duo.duoID,
+        pairStatus: duo.status,
+        accepted: accepted
       }
     };
     
@@ -89,6 +88,14 @@ function matches($http, $state, Auth, Config) {
 
     function success(response){
       // console.log('this is the response line 67 sucess, ', response);
+      console.log('success in confirmMatch');
+      if (accepted && duo.status === 'bePendingPair') {
+        duo.status = 'isPair';
+        matches.confirmedMatches.push(duo);
+      } else if (accepted && duo.status === null) {
+        matches.pendingMatches.push(duo);
+      }
+      console.log('matches.pendingMatches = ', matches.pendingMatches);
       return response.config.data;
     }
     function error(response){
@@ -104,6 +111,7 @@ function matches($http, $state, Auth, Config) {
     }
     else {
       array.shift();
+      console.log('matches.potentialMatches = ', matches.potentialMatches);
     }
   }
 
