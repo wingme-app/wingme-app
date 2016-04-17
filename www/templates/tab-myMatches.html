@@ -8,7 +8,7 @@
   		</div>
 	    <div class="item item-avatar" ng-repeat = "myMatch in myMatches.myMatchesArray">
 	    	<img ng-src="{{myMatch.imageURL}}">
-	    	<h2>{{myMatch.users[0] + "+" + myMatch.users[1]}}</h2>
+	    	<h2>{{myMatch.u1Firstname + "+" + myMatch.u2Firstname}}</h2>
 	    	<h3>{{myMatch.status}}</h3>
 	    </div>
 	<!-- PENDNIG LIST -->
@@ -17,7 +17,7 @@
   		</div>
 	    <div class="item item-avatar" ng-repeat = "myPotentialMatch in myMatches.pendingMatches">
 	    	<img ng-src="{{myPotentialMatch.imageURL}}">
-	    	<h2>{{myPotentialMatch.users[0] + "+" + myPotentialMatch.users[1]}}</h2>
+	    	<h2>{{myPotentialMatch.u1Firstname + "+" + myPotentialMatch.u2Firstname}}</h2>
 	    	<!-- <h3>{{myPotentialMatch.status}}</h3> -->
 	    	<!-- Accept/Deny buttons -->
 	    	<h3>Pending</h3>

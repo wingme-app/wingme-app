@@ -53,7 +53,7 @@ function matches($http, $state, Auth, Config) {
         else if (match.status === 'isPair'){
           matches.confirmedMatches.push(match);
         }
-        else if (match.status === 'null'){
+        else if (match.status === null){
           matches.potentialMatches.push(match);
         }
         else {
@@ -100,7 +100,7 @@ function matches($http, $state, Auth, Config) {
   }
 
   function nextMatch(array){
-    if (array.length === 1){
+    if (array.length <= 1){
       array.shift();
       array.push({imageURL: 'http://www.gimmesomeoven.com/wp-content/uploads/life/2013/10/Picky-576x576.jpg'});
     }

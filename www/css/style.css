@@ -99,3 +99,7 @@ body, .pane, .view {
   background-color: #6FABA4;
   box-shadow: 0 3px 0 0 #6FABA4;
 }
+
+.names {
+  text-align: center;
+}
