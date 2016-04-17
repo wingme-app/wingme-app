@@ -71,7 +71,7 @@ function matches($http, $state, Auth, Config) {
       data: {
         targetDuoID: ID,
         pairStatus: pairStatus,
-        submittedStatus: submittedStatus
+        accepted: submittedStatus
       }
     };
     
