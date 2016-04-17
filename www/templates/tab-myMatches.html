@@ -15,13 +15,12 @@
 	    <div class="item item-divider">
 	    	Pending
   		</div>
-	    <div class="item item-avatar" ng-repeat = "myPotentialMatch in myMatches.pendingMatchesArray">
+	    <div class="item item-avatar" ng-repeat = "myPotentialMatch in myMatches.pendingMatches">
 	    	<img ng-src="{{myPotentialMatch.imageURL}}">
 	    	<h2>{{myPotentialMatch.users[0] + "+" + myPotentialMatch.users[1]}}</h2>
 	    	<!-- <h3>{{myPotentialMatch.status}}</h3> -->
 	    	<!-- Accept/Deny buttons -->
-	    	<ion-option-button class="button-outline button-positive float-right">Accept</ion-option-button>
-        	<ion-option-button class="button-outline button-assertive float-right">Deny</ion-option-button>
+	    	<h3>Pending</h3>
 	    </div>
 	</div>
 

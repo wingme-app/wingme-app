@@ -12,6 +12,14 @@ function matches($http, $state, Auth, Config) {
   var all = [];
   var myMatches = []; 
 
+  var matches = {
+    potentialMatches: [],
+    pendingMatches: [],
+    confirmedMatches: []
+  };
+
+
+
   return {
     getMatches: getMatches,// get all possible matches
     viewPotentialMatch: viewPotentialMatch,
@@ -36,14 +44,13 @@ function matches($http, $state, Auth, Config) {
     // return currentWings;
 
     function success(response) {
-      console.log(response);
-      // this is what response looks like:
-      // push in each match object to potential matches array
-      console.log('find', response);
       response.data.results.forEach(function(match){
-        potentialMatches.push(match);
+        matches.potentialMatches.push(match);
+        if (match.pairStatus === "pendingPair"){
+          matches.pendingMatches.push(match);
+        }
       });
-      return potentialMatches;
+      return matches;
       
     }
 
@@ -65,7 +72,6 @@ function matches($http, $state, Auth, Config) {
         targetDuoID: ID,
         pairStatus: pairStatus,
         submittedStatus: submittedStatus
-
       }
     };
     
@@ -74,7 +80,7 @@ function matches($http, $state, Auth, Config) {
 
     function success(response){
       // console.log('this is the response line 67 sucess, ', response);
-      console.log('this is response', response);
+      console.log('this is response for accepted duo click', response);
       return response.config.data;
     }
     function error(response){
