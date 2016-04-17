@@ -32,6 +32,12 @@ body, .pane, .view {
   font-weight: 700;
 }
 
+ion-tabs.tabs-color-active-positive .tab-item.tab-item-active,
+ion-tabs.tabs-color-active-positive .tab-item.active,
+ion-tabs.tabs-color-active-positive .tab-item.activated {
+  color: #5BC9BC;
+}
+
 /**
  *
  * Buttons
