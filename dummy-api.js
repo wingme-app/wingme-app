@@ -1,12 +1,18 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+var cors = require('cors')
+var jwt = require('jsonwebtoken');
+var auth = require('./modules/auth');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
+
+// cors
+app.use(cors());
 
 //* ---------------------------------------------
 //* ---------------------------------------------
@@ -32,6 +38,18 @@ users.push({
 }, {
   userID: 6,
   username: 'Tiffany'
+}, {
+  userID: 7,
+  username: 'Danny'
+}, {
+  userID: 8,
+  username: 'Chris'
+}, {
+  userID: 9,
+  username: 'Phil'
+}, {
+  userID: 10,
+  username: 'Joseph'
 });
 
 var duos = [];
@@ -57,7 +75,7 @@ duos.push({
  *  Add Wing
  *
  */
-app.post('/api/wings/add', function(req, res) {
+app.post('/api/wings/add', auth.ifAuthorized, function(req, res) {
   /**
    *  This is for a post request coming to /api/wings/add
    *  To be used on the addwing tab
@@ -86,7 +104,7 @@ app.post('/api/wings/add', function(req, res) {
  *  Wing Requests
  *
  */
- app.get('/api/wings/requests', function(req, res) {
+ app.get('/api/wings/requests', auth.ifAuthorized, function(req, res) {
    /**
     *  This is for a GET request coming to /api/wings/requests
     *  To be used on the wing requests tab to retrieve a list of wing requests (potential wings)
@@ -99,16 +117,27 @@ app.post('/api/wings/add', function(req, res) {
   console.log('=============');
   console.log(req.method + ' received: ' + req.url);
 
+  var bool = true;
+
   var results = users.slice().filter(function(user) {
     // some kind of filtering will occur here.
     return user.userID !== 1;
   });
 
+  results = results.map(function(user) {
+    user.isWing = bool;
+    user.currentWing = false;
+    bool = !bool;
+    return user;
+  });
+
+  results[2].currentWing = true;
+
   console.log('SUCCESS');
   res.send({potentialWings: results});
  });
 
-app.post('/api/wings/requests', function(req, res) {
+app.post('/api/wings/requests', auth.ifAuthorized, function(req, res) {
   /**
    *  This is for a POST request coming to /api/wings/requests
    *  To be used on the wing requests tab
@@ -145,7 +174,7 @@ app.post('/api/wings/requests', function(req, res) {
  *  Find Duo
  *
  */
- app.get('/api/duos/find', function(req, res) {
+ app.get('/api/duos/find', auth.ifAuthorized, function(req, res) {
    /**
     *  This is for a GET request coming to /api/duos/find
     *  To be used on the find duo page to retrieve a list of potential duos
@@ -167,7 +196,7 @@ app.post('/api/wings/requests', function(req, res) {
   res.send({results: results});
  });
 
-app.post('/api/duos/find', function(req, res) {
+app.post('/api/duos/find', auth.ifAuthorized, function(req, res) {
   /**
    *  This is for a POST request coming to /api/duos/find
    *  To be used on the find duo page to accept/deny another duo as a "pair" (of duos)
@@ -185,12 +214,12 @@ app.post('/api/duos/find', function(req, res) {
   console.log('=============');
   console.log(req.method + ' received: ' + req.url);
 
-  if ("currentDuoID" in req.body &&
-      "targetDuoID" in req.body &&
-      "accepted" in req.body &&
-      typeof req.body.currentDuoID === "number" &&
-      typeof req.body.targetDuoID === "number" &&
-      typeof req.body.accepted === "boolean"
+  if ("duoID" in req.body &&
+      // "targetDuoID" in req.body &&
+      // "accepted" in req.body &&
+      typeof req.body.duoID === "number" //&&
+      // typeof req.body.targetDuoID === "number" &&
+      // typeof req.body.accepted === "boolean"
     ) {
     console.log('SUCCESS');
     res.send();
@@ -208,7 +237,7 @@ app.post('/api/duos/find', function(req, res) {
  *  Pending Duos
  *
  */
-app.get('/api/duos/', function(req, res) {
+app.get('/api/duos/', auth.ifAuthorized, function(req, res) {
   /**
    *  This is for a GET request coming to /api/duos/
    *  To be used on the 'my duos' page to retrieve a list of pending/accepted/denied wings.
@@ -238,10 +267,100 @@ app.get('/api/duos/', function(req, res) {
   res.send({results: results});
  });
 
+/** ---------------------------------------------
+ *  Authentication
+ *  --------------
+ *
+ *  For the sake of this dummy authentication api, the users variable below is our mock database.  
+ *  
+ */
+var authedUsers = {};
+var tokenSecret = 'CouchBaseRocks';
+
+// sign up handler
+app.post('/api/signup', function(req, res) {
+  var user = req.body.username;
+  var pass = req.body.password;
+  var userObj = {
+    username: user,
+    ID: Object.keys(req.body).length
+  }
 
 
+  // if user and password are not BOTH filled out
+  if (!user && !pass) {
+    res.json({
+      success: false,
+      message: 'Please provide both a username and password.'
+    });
+
+  } else {
+
+    // if user already exists
+    if (user in authedUsers) {
+      res.json({
+        success: false,
+        message: user + ' already exists in our database!'
+      });
+
+    // if all checks out, store user and pass in authedUsers
+    // NOTE: We would never store the password in plain text like this.
+    // We should be using something like bcrypt with a salt to hash it.
+    } else {
+      authedUsers[user] = pass;
+      
+      var token = auth.genToken(userObj);
+
+      res.json({
+        success: true,
+        message: 'Enjoy your token!',
+        token: token
+      });
+    }
+  }
+});
+
+// sign in handler
+app.post('/api/login', function(req, res) {
+  var user = req.body.username;
+  var pass = req.body.password;
+  var userObj = {
+    username: user,
+    ID: Object.keys(req.body).length
+  }
+
+  // if user does not exist
+  if (!authedUsers[user]) {
+    res.json({
+      success: false,
+      message: 'Authentication failed. User not found.'
+    });
+
+  // if user exists
+  } else {
+
+    // but password is wrong
+    if (authedUsers[user] !== pass) {
+      res.json({
+        success: false,
+        message: 'Authentication failed. Password is incorrect.'
+      });
+
+    // if all checks out
+    } else {
+      var token = auth.genToken(userObj);
+
+      res.json({
+        success: true,
+        message: 'Enjoy your token!',
+        token: token
+      });
+    }
+  }
+}); // end authentication
 
 
-app.listen(5000, function () {
-  console.log('Dummy API is available at http://localhost:5000');
+var port = 8000;
+app.listen(port, function () {
+  console.log('Dummy API is available at http://localhost:', port);
 });

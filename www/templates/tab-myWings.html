@@ -1,0 +1,90 @@
+<ion-view view-title="My Wings">
+  <ion-content>
+
+    <div class="item item-divider">
+      Current Wing
+    </div>
+
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="wing in myWings.currentWing" type="item-text-wrap">
+        <img ng-src="./img/ben.png">
+        <h2>{{wing.firstname}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i> <!-- this is the arrow at end of row-->
+        <ion-option-button class="button-positive" ng-click="">
+          Remove Current Wing
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+
+    <div class="item item-divider">
+      Pending Current Wings
+    </div>
+    <!-- handles CWs received -->
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="wing in myWings.currentWingsReceived" type="item-text-wrap">
+        <img ng-src="./img/ben.png">
+        <h2>{{wing.firstname}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i> <!-- this is the arrow at end of row-->
+        <ion-option-button class="button-positive" ng-click="myWings.currentWingResp(wing.ID,true)">
+          Accept
+        </ion-option-button>
+        <ion-option-button class="button-assertive" ng-click="myWings.currentWingResp(wing.ID,false)">
+          Deny
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+    <!-- handles Current Wings Sent -->
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="wing in myWings.currentWingsSent" type="item-text-wrap">
+        <img ng-src="./img/ben.png">
+        <h2>{{wing.firstname}}</h2>
+        <h3>Pending</h3>
+      </ion-item>
+    </ion-list>
+
+    <div class="item item-divider">
+      My Wings
+    </div>
+
+     <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="wing in myWings.confirmedWings" type="item-text-wrap">
+        <img ng-src="./img/ben.png">
+        <h2>{{wing.firstname}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i> <!-- this is the arrow at end of row-->
+        <ion-option-button class="button-positive" ng-click="myWings.beCurrentWing(wing.ID,true)">
+          Set Current Wing
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+
+    <div class="item item-divider">
+      Wing Requests
+    </div>
+    
+    <!-- list of wing requests sent out and now PENDING-->
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="wing in myWings.wingRequestsSent" type="item-text-wrap">
+        <img ng-src="./img/ben.png">
+        <h2>{{wing.firstname}}</h2>
+        <h3>Pending</h3>
+      </ion-item>
+    </ion-list>
+
+    <!-- list of wing requests that were received and now accept/reject -->
+
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="wing in myWings.wingRequestsReceived" type="item-text-wrap">
+        <img ng-src="./img/ben.png">
+        <h2>{{wing.firstname}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i> <!-- this is the arrow at end of row-->
+        <ion-option-button class="button-positive" ng-click="myWings.updateWing(wing.ID,true)">
+          Accept
+        </ion-option-button>
+        <ion-option-button class="button-assertive" ng-click="myWings.updateWing(wing.ID,false)">
+          Deny
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+    
+  </ion-content>
+</ion-view>

@@ -1,35 +1,45 @@
-var sqlite3 = require("sqlite3");
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
+var cors = require('cors');
+var config = require('./modules/config');
 
-var dbConfig = {
-  client: 'sqlite3',
-  connection: {
-    filename: "./data/db.sqlite"
-  },
-  useNullAsDefault: true
-};
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
 
-var knex = require('knex')(dbConfig);
-var bookshelf = require('bookshelf')(knex);
+// parse application/json
+app.use(bodyParser.json());
 
-knex.schema.createTableIfNotExists('users', function (table) {
-  table.increments();
-  table.string('name');
-  table.timestamps();
-}).then(dbQueries);
+// cors
+app.use(cors());
 
-function dbQueries() {
+//* ---------------------------------------------
+//* ---------------------------------------------
 
-  var User = bookshelf.Model.extend({
-    tableName: 'users',
-    posts: function() {
-      return this.hasMany(Posts);
-    }
-  });
 
-  User.where('id', 1).fetch({withRelated: ['posts.tags']}).then(function(user) {
-    console.log(user.related('posts').toJSON());
-  }).catch(function(err) {
-    console.error(err);
-  });
+// run schema if needed:
+// require('./db/config.js');
 
-}
+
+//* ---------------------------------------------
+//* ---------------------------------------------
+
+
+/** 
+ *  We use express router to set up our routes in a modular fashion.
+ *
+ *  Here are the various api routes for our application.
+ *  take a look inside these files to get a feel for how express router works.
+ *
+ *  You can also look here for documentation:
+ *  @url: http://expressjs.com/en/guide/routing.html#express-router
+ */
+app.use('/api/signup', require('./routes2/signup'));
+app.use('/api/login', require('./routes2/login'));
+app.use('/api/wings', require('./routes2/wings'));
+app.use('/api/pairs', require('./routes2/pairs'));
+
+
+app.listen(config.port, function () {
+  console.log('The server is available at http://localhost:', config.port);
+});

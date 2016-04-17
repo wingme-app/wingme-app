@@ -1,13 +1,20 @@
-// Ionic Starter App
+(function() {
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+var app = angular.module('wingme', ['ionic', 'wingme.config', 'wingme.authentication', 'wingme.controllers', 'wingme.services']);
 
-.run(function($ionicPlatform) {
+app.run(run);
+app.config(routes);
+
+// register dependencies
+angular.module('wingme.config', []);
+angular.module('wingme.authentication', []);
+angular.module('wingme.controllers', []);
+angular.module('wingme.services', []);
+
+// --------------------------------------
+// --------------------------------------
+
+function run($ionicPlatform, $rootScope, $state, Auth) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,66 +27,94 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    // default view to tab.addWing
+    // if user has no token, it will go to login.
+    $state.go('tab.addWing');
   });
-})
 
-.config(function($stateProvider, $urlRouterProvider) {
+  // on state changes, we check for authentication!
+  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+    if (toState.authenticate && !Auth.isAuthed()) {
+      // User isn’t authenticated
+      event.preventDefault(); 
+      $state.go('login');
+    }
+  });
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
+}
+
+function routes($stateProvider, $urlRouterProvider) {
+
   $stateProvider
 
+  .state('signup', {
+    url: '/signup',
+    templateUrl: 'templates/page-signup.html',
+    controller: 'SignUpCtrl as signup'
+  })
+
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/page-login.html',
+    controller: 'LoginCtrl as login'
+  })
+
   // setup an abstract state for the tabs directive
-    .state('tab', {
+  .state('tab', {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
   })
 
   // Each tab has its own nav history stack:
-
-  .state('tab.dash', {
-    url: '/dash',
+  .state('tab.addWing', {
+    url: '/addWing',
+    authenticate: true,
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+      'tab-addWing': {
+        templateUrl: 'templates/tab-addWing.html',
+        controller: 'AddWingCtrl as addWing'
       }
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.myWings', { // my wings
+      url: '/myWings',
+      authenticate: true,
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+        'tab-myWings': {
+          templateUrl: 'templates/tab-myWings.html',
+          controller: 'WingRequestsCtrl as myWings'
         }
       }
     })
 
-  .state('tab.account', {
-    url: '/account',
+  .state('tab.findMatch', {
+    url: '/findMatch',
+    authenticate: true,
     views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+      'tab-findMatch': {
+        templateUrl: 'templates/tab-findMatch.html',
+        controller: 'FindMatchCtrl as findMatch'
+      }
+    }
+  })
+
+  .state('tab.myMatches', {
+    url: '/myMatches',
+    authenticate: true,
+    views: {
+      'tab-myMatches': {
+        templateUrl: 'templates/tab-myMatches.html',
+        controller: 'MyMatchesCtrl as myMatches'
       }
     }
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/login');
 
-});
+}
+
+})(); // end
