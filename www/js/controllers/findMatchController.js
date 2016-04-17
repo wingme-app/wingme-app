@@ -2,7 +2,7 @@
 
 var module = angular.module('wingme.controllers');
 
-module.controller('FindMatchCtrl', function(Matches) { //as findMatch
+module.controller('FindMatchCtrl', function(Matches, $scope) { //as findMatch
 
 	var vm = this;
 
@@ -23,16 +23,14 @@ module.controller('FindMatchCtrl', function(Matches) { //as findMatch
 
 	// fired when ACCEPT match button click
 
-	vm.confirmMatch = function(ID, pairStatus, submittedStatus){
-		Matches.confirmMatch(ID, pairStatus, submittedStatus).then(function(response){
-			console.log('then resp', response);
+	vm.confirmMatch = function(duo, accepted){
+		Matches.confirmMatch(duo, accepted).then(function(response){
 			Matches.nextMatch(vm.potentialMatches);
+			console.log('vm potentialMatches = ', vm.potentialMatches);
 		});
 	};
 
 });
-
-
 
 })(); // end
 

@@ -3,7 +3,7 @@ var knex = require('../db');
 function getPair(dID1, dID2) {
   return knex('pairs')
     .whereIn('dID1', [dID1, dID2])
-    .whereIn('dID2', [did1, dID2])
+    .whereIn('dID2', [dID1, dID2])
     .then(function(resp) {
       if (resp.length) {
         return resp[0];
@@ -45,9 +45,13 @@ function updateStatus(status, dID1, dID2) {
   .update({ status: status })
 }
 
-function insertNewPair(dID1, dID2) {
+function insertNewPair(dID1, dID2, reject) {
   return insertInto('pairs', dID1, dID2).then(function() {
-    return insertInto('pairsPending', dID1, dID2);
+    if (reject) {
+      return insertInto('pairsRejected', dID1, dID2);
+    } else {
+      return insertInto('pairsPending', dID1, dID2);
+    }
   });
 }
 
@@ -108,6 +112,20 @@ function getAllDuos(clientID) {
     });
 }
 
+function rejectPair(dID1, dID2) {
+  return getPair(dID1, dID2).then(function(resp) {
+    if (resp) {
+      return db.movePair('pairsPending', 'pairsRejected', clientDuoID, targetDuoID).then(function() {
+        return; // force query to run
+      });
+    } else {
+      return insertNewPair(dID1, dID2, 'reject').then(function() {
+        return; // forces query to run
+      })
+    }
+  })
+}
+
 module.exports = {
   getAllPairsOf: getAllPairsOf,
   getUsersOf: getUsersOf,
@@ -115,4 +133,5 @@ module.exports = {
   getDuoID: getDuoID,
   movePair: movePair,
   insertNewPair: insertNewPair,
+  rejectPair: rejectPair
 }

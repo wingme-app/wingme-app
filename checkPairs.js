@@ -1,5 +1,10 @@
 var knex = require('./db/config.js').knex;
 
+knex('pairs').then(function(resp) {
+  console.log('pairs = ', resp);
+  console.log('====================================')
+})
+
 knex('pairsPending').then(function(resp) {
   console.log('pairsPending = ', resp);
   console.log('====================================')
