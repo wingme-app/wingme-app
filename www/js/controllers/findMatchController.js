@@ -14,7 +14,7 @@ module.controller('FindMatchCtrl', function(Matches) { //as findMatch
 	Matches.getMatches().then(function(matches) {
 		console.log('inside of get matches : ', matches);
 	  	vm.displayImg = true;
-	  	vm.potentialMatches = matches;
+	  	vm.potentialMatches = matches.potentialMatches;
 	}).catch(function(err) {
 		console.error(err);
 	}); 
