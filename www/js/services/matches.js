@@ -46,14 +46,13 @@ function matches($http, $state, Auth, Config) {
       matches.pendingMatches = [];
       matches.confirmedMatches = [];
       response.data.results.forEach(function(match){
-        console.log('this is a match: ', match);
         if (match.status === 'pendingPair'){
           matches.pendingMatches.push(match);
         }
         else if (match.status === 'isPair'){
           matches.confirmedMatches.push(match);
         }
-        else if (match.status === null){
+        else if (match.status === null || match.status === "bePendingPair"){
           matches.potentialMatches.push(match);
         }
         else {
@@ -90,7 +89,6 @@ function matches($http, $state, Auth, Config) {
 
     function success(response){
       // console.log('this is the response line 67 sucess, ', response);
-      console.log('this is response for accepted duo click', response);
       return response.config.data;
     }
     function error(response){
@@ -120,7 +118,6 @@ function matches($http, $state, Auth, Config) {
 
     function success(response) {
       // this is what response looks like:
-      console.log('get matches response ', response);
       response.data.results.forEach(function(myMatch){
         myMatches.push(myMatch);
       });
