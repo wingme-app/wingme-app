@@ -10,3 +10,9 @@ knex('pairsAccepted').then(function(resp) {
   console.log('pairsAccepted = ', resp);
   console.log('====================================')
 })
+
+
+knex('pairsRejected').then(function(resp) {
+  console.log('pairsRejected = ', resp);
+  console.log('====================================')
+})

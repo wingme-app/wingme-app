@@ -16,20 +16,13 @@ function getPair(dID1, dID2) {
 
 function getDuoID(uID) {
   return knex('duos')
-    .where({
-      status: 'duosCurAcc',
-      uID1: uID
-    })
-    .orWhere({
-      status: 'duosCurAcc',
-      uID2: uID
-    })
+    .where('status', 'duosCurAcc')
+    .where('uID1', uID)
+    .orWhere('uID1', uID)
     .select('ID')
     .then(function(resp) {
-      console.log('resp.length = ', resp.length);
       if (resp.length) {
         return resp[0].ID;
-        console.log('inside of getDuoID. resp[0] = ', resp[0]);
       } else {
         throw 'couldn\'t find a duoID for clientID: ' + uID;
       }

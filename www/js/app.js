@@ -48,6 +48,12 @@ function routes($stateProvider, $urlRouterProvider) {
 
   $stateProvider
 
+  .state('landing', {
+    url: '/landing',
+    templateUrl: 'templates/page-landing.html',
+    controller: 'LandingCtrl as landing'
+  })
+
   .state('signup', {
     url: '/signup',
     templateUrl: 'templates/page-signup.html',
