@@ -18,7 +18,7 @@ function getDuoID(uID) {
   return knex('duos')
     .where('status', 'duosCurAcc')
     .where('uID1', uID)
-    .orWhere('uID1', uID)
+    .orWhere('uID2', uID)
     .select('ID')
     .then(function(resp) {
       if (resp.length) {
