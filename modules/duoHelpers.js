@@ -3,7 +3,7 @@ var knex = require('../db');
 function getUser(username) {
   console.log('inside of getUser');
   return knex('users')
-    .select('ID')
+    .select('ID', 'firstname', 'lastname')
     .where('username', username)
 }
 
@@ -35,14 +35,23 @@ function getUIDsOf(duoID) {
 
 function getDuo(duoID, uID1, uID2) {
   console.log('inside of getDuo');
+  console.log('uID1 = ', uID1);
+  console.log('uID2 = ', uID2);
   // takes in duoID OR uID1 & uID2.
   if (!duoID) {
     return knex('duos')
       .whereIn('uID1', [uID1, uID2])
       .whereIn('uID2', [uID1, uID2])
+      .then(function(resp) {
+        console.log('inside of duohelper. resp = ', resp);
+        return resp;
+      })
   } else {
     return knex('duos')
-      .where('ID', duoID);
+      .where('ID', duoID)
+      .then(function(resp) {
+        return resp;
+      })
   }
 }
 

@@ -206,6 +206,15 @@ function wings($http, $state, Config, Auth) {
     // request callbacks
 
     function success(response) {
+      console.log(response);
+      if (response.data.results) {
+        var user = response.data.results;
+        if (user.status === 'pendingWing') {
+          wingTypes.wingRequestsSent.push(user);
+        } else if (response.data.results.status === 'isWing') {
+          wingTypes.confirmedWings.push(user);
+        }
+      }
       $state.go('tab.myWings');
     }
 
