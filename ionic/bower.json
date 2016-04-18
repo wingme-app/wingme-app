@@ -1,0 +1,25 @@
+{
+  "name": "wingme-app",
+  "private": true,
+  "authors": [
+    "Kan Adachi",
+    "Xiaolu Bai",
+    "Ben Richter",
+    "Jessica Chou"
+  ],
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.2.4"
+  },
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Ionicons": "ionicons#^2.0.1"
+  }
+}
