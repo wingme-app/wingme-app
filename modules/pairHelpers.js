@@ -115,7 +115,7 @@ function getAllDuos(clientID) {
 function rejectPair(dID1, dID2) {
   return getPair(dID1, dID2).then(function(resp) {
     if (resp) {
-      return db.movePair('pairsPending', 'pairsRejected', clientDuoID, targetDuoID).then(function() {
+      return movePair('pairsPending', 'pairsRejected', dID1, dID2).then(function() {
         return; // force query to run
       });
     } else {
