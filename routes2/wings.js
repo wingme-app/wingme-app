@@ -36,11 +36,11 @@ function postAdd(req, res) {
 
     } else {
       targetID = user[0].ID;
-      processInfo();
+      processInfo(user[0]);
     }
   });
 
-  function processInfo() {
+  function processInfo(userObj) {
     db.getDuo(null, clientID, targetID).then(function(resp) {
       var duo = resp[0];
 
@@ -62,7 +62,8 @@ function postAdd(req, res) {
 
         } else if (status === 'bePendingWing') {
           db.moveDuo('duosPen', 'duosAcc', targetID, clientID).then(function() {
-            hp.sendJSON(res, true, 'You are now winged up with ' + wingToAdd + '!');
+            userObj.status = 'isWing'
+            hp.sendJSON(res, true, 'You are now winged up with ' + wingToAdd + '!', userObj);
           });
 
         } else {
@@ -72,7 +73,8 @@ function postAdd(req, res) {
       // if duo does not exist
       } else {
         db.newDuoEntry(clientID, targetID).then(function() {
-          hp.sendJSON(res, true, 'You\'ve sent ' + wingToAdd + ' a wing request!');
+          userObj.status = 'pendingWing'
+          hp.sendJSON(res, true, 'You\'ve sent ' + wingToAdd + ' a wing request!', userObj);
         });
       }
     });
