@@ -10,6 +10,15 @@ function wings($http, $state, Config, Auth) {
 
   var currentWings = [];
 
+  var wingTypes = {
+    currentWing: [],
+    currentWingsReceived: [], 
+    currentWingsSent: [],
+    confirmedWings: [],
+    wingRequestsSent: [],
+    wingRequestsReceived: []
+  };
+
   return {
     getWings: getWings, // gets all wings from /api/wings/requests
     updateWing: updateWing, // post wing to /api/wings/requests
@@ -37,17 +46,17 @@ function wings($http, $state, Config, Auth) {
 
       console.log('response = ', response);
 
-      var wingTypes = {currentWing: [], currentWingsReceived: [],
-        currentWingsSent: [],
-        confirmedWings: [],
-        wingRequestsSent: [],
-        wingRequestsReceived: []
-      };
+      wingTypes.currentWing = [];
+      wingTypes.currentWingsReceived = [];
+      wingTypes.currentWingsSent = [];
+      wingTypes.confirmedWings = [];
+      wingTypes.wingRequestsSent = [];
+      wingTypes.wingRequestsReceived = [];
 
       response.data.results.forEach(function(wing) {
         // we manipulate the current wings variable instead of reassigning the variable.
         // this forces a digest cycle refresh.
-        console.log('wing: ', wing);
+
         if (wing.status === "isCurrentWing"){
           wingTypes.currentWing.push(wing);
         }
@@ -64,6 +73,7 @@ function wings($http, $state, Config, Auth) {
           wingTypes.wingRequestsSent.push(wing);
         }
         else if (wing.status === "bePendingWing"){
+          console.log('be pending wing: ', wing);
           wingTypes.wingRequestsReceived.push(wing);
         }
         else{
@@ -79,15 +89,15 @@ function wings($http, $state, Config, Auth) {
     }
   }
 
-  function updateWing(userID, status) {
+  function updateWing(wing) {
     // index is the position inside of the array of wings given to us in the get request.
 
     var request = {
       method: 'POST',
       url: Config.dev.api + '/wings/wingRequests',
       data: {
-        "targetID" : userID, 
-        "accepted" : status
+        "targetID" : wing.userID, 
+        "accepted" : wing.status
       }
     };
 
@@ -98,7 +108,22 @@ function wings($http, $state, Config, Auth) {
     // request callbacks
 
     function success(response) {
-      console.log(response);
+      console.log('this is response: ', response);
+      console.log('this is wing: ', wing);
+      if (wing.status){
+        var num;
+        var wingMoved = wingTypes.wingRequestsReceived.filter(function(item, index){
+          num = index;
+          return item.ID === wing.userID;
+        });
+        wingTypes.wingRequestsReceived.splice(num,1); //only deletes information not slot!!
+        wingTypes.confirmedWings.push(wingMoved[0]);
+
+      }
+      else if (!wing.status){
+        wing.status = null;
+      }
+
     }
 
     function error(response) {
@@ -158,13 +183,13 @@ function wings($http, $state, Config, Auth) {
     }
   }
 
-  function addWingPost(username) {
+  function addWingPost(username) { //pass in obj instead
 
     var request = {
       method: 'POST',
       url: Config.dev.api + '/wings/add',
       data: {
-        wingToAdd: username
+        wingToAdd: username //change to .username
       }
     };
 
@@ -175,7 +200,6 @@ function wings($http, $state, Config, Auth) {
     // request callbacks
 
     function success(response) {
-      console.log(response);
       $state.go('tab.myWings');
     }
 

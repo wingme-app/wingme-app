@@ -59,7 +59,6 @@ function matches($http, $state, Auth, Config) {
         }
       });
       return matches;
-      
     }
 
     function error(response) {
@@ -88,7 +87,6 @@ function matches($http, $state, Auth, Config) {
 
     function success(response){
       // console.log('this is the response line 67 sucess, ', response);
-      console.log('success in confirmMatch');
       if (accepted && duo.status === 'bePendingPair') {
         duo.status = 'isPair';
         matches.confirmedMatches.push(duo);
@@ -96,7 +94,7 @@ function matches($http, $state, Auth, Config) {
         matches.pendingMatches.push(duo);
       }
       console.log('matches.pendingMatches = ', matches.pendingMatches);
-      return response.config.data;
+      return response.config.data; //why doing this?
     }
     function error(response){
       console.log('error in accept duo: ', response);
@@ -114,6 +112,7 @@ function matches($http, $state, Auth, Config) {
       console.log('matches.potentialMatches = ', matches.potentialMatches);
     }
   }
+
 
   function getMyMatches(){
     var request = {
