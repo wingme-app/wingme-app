@@ -77,7 +77,7 @@
         <img ng-src="./img/ben.png">
         <h2>{{wing.firstname}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i> <!-- this is the arrow at end of row-->
-        <ion-option-button class="button-positive" ng-click="myWings.updateWing(wing.ID,true)">
+        <ion-option-button class="button-positive" ng-click="myWings.updateWing({userID: wing.ID, status: true})">
           Accept
         </ion-option-button>
         <ion-option-button class="button-assertive" ng-click="myWings.updateWing(wing.ID,false)">

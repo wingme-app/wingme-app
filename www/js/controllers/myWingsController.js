@@ -22,7 +22,7 @@ module.controller('WingRequestsCtrl', function(Wings) {
 
   Wings.getWings()
     .then(function(wings) {
-      console.log('data from getWings', wings);
+      // console.log('data from getWings', wings);
       vm.currentWing = wings.currentWing;
 
       vm.currentWingsReceived = wings.currentWingsReceived;

@@ -1,5 +1,11 @@
 /* Empty. Add your own CSS if you like */
 
+.logo {
+  width: 50%;
+  display: block;
+  margin: auto;
+}
+
 body {
   color: #333745;
 }
@@ -80,7 +86,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated {
 }
 
 .add-wing .item-input {
-  top: 180px;
+  top: 30px;
 }
 
 .add-wing .item-input input {
@@ -88,7 +94,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated {
 }
 
 .add-wing .button {
-  top: 180px;
+  top: 30px;
   display: block;
   margin: auto;
 }
