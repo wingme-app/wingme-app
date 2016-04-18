@@ -156,6 +156,17 @@ function wings($http, $state, Config, Auth) {
 
     function success(response) {
       console.log('accepted CW req ', response);
+      if (status){
+        var num;
+        var movedWing = wingTypes.confirmedWings.filter(function(item, index){
+          index = num;
+          return item.ID === userID;
+        });
+        console.log('this is moved wing: ', movedWing);
+        wingTypes.confirmedWings.splice(num, 1);
+        wingTypes.currentWingsSent.push(movedWing[0]);
+      }
+
     }
 
     function error(response) {
@@ -182,6 +193,27 @@ function wings($http, $state, Config, Auth) {
 
     function success(response) {
       console.log('accepted CW req ', response);
+      if (status){
+        var num;
+        var movedWing = wingTypes.currentWingsReceived.filter(function(item, index){
+          index = num;
+          return item.ID === userID;
+        });
+        console.log('this is moved wing: ', movedWing);
+        wingTypes.currentWingsReceived.splice(num, 1);
+        wingTypes.currentWing.push(movedWing[0]);
+      }
+      else {
+        var num;
+        var movedWing = wingTypes.currentWingsReceived.filter(function(item, index){
+          index = num;
+          return item.ID === userID;
+        });
+        console.log('this is moved wing: ', movedWing);
+        wingTypes.currentWingsReceived.splice(num, 1);
+        wingTypes.confirmedWings.push(movedWing[0]);
+      }
+      
     }
 
     function error(response) {
