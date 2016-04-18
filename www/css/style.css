@@ -4,6 +4,8 @@
   width: 50%;
   display: block;
   margin: auto;
+  position: relative;
+  top: 50px;
 }
 
 body {
@@ -29,7 +31,7 @@ body, .pane, .view {
 }
 
 .bar.bar-stable {
-  background-color: #48AB9F;
+  background-color: #279DC4;
   border: none;
 }
 
@@ -41,7 +43,46 @@ body, .pane, .view {
 ion-tabs.tabs-color-active-positive .tab-item.tab-item-active,
 ion-tabs.tabs-color-active-positive .tab-item.active,
 ion-tabs.tabs-color-active-positive .tab-item.activated {
-  color: #5BC9BC;
+  color: #279DC4;
+}
+
+.landing-page {
+  background-color: #279DC4;
+}
+
+.landing-page .logo {
+  position: relative;
+  top: 0;
+  width: 262px;
+  height: 185px;
+  background-image: url('../img/wmLogo-white.png');
+}
+
+.landing-container {
+  position: relative;
+  top: 100px;
+}
+
+.landing-page .button-dark {
+  background-color: #fff;
+  color: #117191;
+}
+
+.landing-page .button-dark:hover, 
+.landing-page .button-dark:active {
+  background-color: #A7E0F2;
+  color: #117191;
+}
+
+.landing-page .button-balanced {
+  background-color: #F25774;
+  color: #fff;
+}
+
+.landing-page .button-balanced:hover,
+.landing-page .button-balanced:active {
+  background-color: #C43D56;
+  color: #fff;
 }
 
 /**
@@ -51,27 +92,31 @@ ion-tabs.tabs-color-active-positive .tab-item.activated {
  */
  
 .button.button-positive {
-  background-color: #4FA7FF;
+  background-color: #279DC4;
 }
 
+.button.button-positive:hover,
 .button.button-positive:active {
-  background-color: #4091E3;
+  background-color: #279DC4;
 }
 
 .button.button-balanced {
-  background-color: #FF9C71;
+  background-color: #F25774;
 }
 
+.button.button-balanced:hover,
 .button.button-balanced:active {
-  background-color: #F28657;
+  background-color: #F25774;
 }
 
 .button.button-dark {
-  background-color: #3C968C;
+  color: #fff;
+  background-color: #1B7694;
 }
 
-.button.button-dark:active {
-  background-color: #35877D;
+.button-bar {
+  width: 96%;
+  margin: auto;
 }
 
 
@@ -86,7 +131,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated {
 }
 
 .add-wing .item-input {
-  top: 30px;
+  top: 100px;
 }
 
 .add-wing .item-input input {
@@ -94,7 +139,7 @@ ion-tabs.tabs-color-active-positive .tab-item.activated {
 }
 
 .add-wing .button {
-  top: 30px;
+  top: 100px;
   display: block;
   margin: auto;
 }
@@ -102,12 +147,18 @@ ion-tabs.tabs-color-active-positive .tab-item.activated {
 .add-wing .button-dark {
   font-weight: 700;
   color: #fff;
-  -webkit-box-shadow: 0 3px 0 0 #2A736B;
-  box-shadow: 0 3px 0 0 #2A736B;
+  background-color: #279DC4;
+  -webkit-box-shadow: 0 3px 0 0 #1C7E9E;
+  box-shadow: 0 3px 0 0 #1C7E9E;
 }
 
 .add-wing .button-dark:active {
-  box-shadow: 0 3px 0 0 #2A736B;
+  color: #fff;
+  background-color: #279DC4;
+}
+
+.add-wing .button-dark:active {
+  box-shadow: 0 3px 0 0 #1C7E9E;
 }
 
 .names {

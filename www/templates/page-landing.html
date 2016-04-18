@@ -1,15 +1,17 @@
-<ion-view view-title="WingMe" class="auth-page">
+<ion-view view-title="WingMe" class="landing-page">
   <ion-content class="padding">
+    
+    <div class="landing-container">
+      <div class="logo"></div>
 
-    <h1>WingMe</h1>
+      <button ng-click="landing.redirectToLogin()" class="button button-block button-dark">
+        Log In
+      </button>
 
-    <button ng-click="landing.redirectToLogin()" class="button button-block button-dark">
-      Sign Up
-    </button>
-
-    <button ng-click="landing.redirectToSignup()" class="button button-block button-balanced">
-      Sign Up
-    </button>
+      <button ng-click="landing.redirectToSignup()" class="button button-block button-balanced">
+        Sign Up
+      </button>
+    </div>
 
   </ion-content>
 </ion-view>
