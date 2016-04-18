@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- Authored JS -->
+    <script src="js/app.js"></script>
+    <script src="js/config.js"></script>
+    <!-- Controllers -->
+    <script src="js/controllers/findMatchController.js"></script>
+    <script src="js/controllers/myMatchesController.js"></script>
+    <script src="js/controllers/myWingsController.js"></script>
+    <script src="js/controllers/addWingController.js"></script>
+    <script src="js/controllers/signUpController.js"></script>
+    <script src="js/controllers/loginController.js"></script>
+    <script src="js/controllers/landingController.js"></script>
+    <script src="js/controllers/navController.js"></script>
+    <!-- Services -->
+    <script src="js/services/authentication.js"></script>
+    <script src="js/services/wings.js"></script>
+    <script src="js/services/matches.js"></script>
+
+  </head>
+  <body ng-app="wingme">
+    <!--
+      The nav bar that will be updated as we navigate between views.
+    -->
+    <ion-nav-bar class="bar-stable" ng-controller="NavCtrl as nav">
+      <ion-nav-buttons side="secondary">
+        <button ng-if="nav.authed" class="button button-dark" ng-click="nav.logout()">
+          Logout
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <!--
+      The views will be rendered in the <ion-nav-view> directive below
+      Templates are in the /templates folder (but you could also
+      have templates inline in this html file if you'd like).
+    -->
+    <ion-nav-view></ion-nav-view>
+  </body>
+</html>

@@ -56,3 +56,10 @@ bower_components
 
 platforms/
 plugins/
+
+# Database
+#
+#
+
+data/
+db/makeData.js

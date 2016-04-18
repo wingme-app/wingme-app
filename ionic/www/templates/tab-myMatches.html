@@ -1,0 +1,39 @@
+<ion-view view-title="My Matches">
+  <ion-content>
+
+	<div class="list">
+	<!-- ACCEPTED LIST -->
+		<div class="item item-divider">
+	    	Accepted
+  		</div>
+	    <div class="item item-avatar" ng-repeat = "myMatch in myMatches.myMatchesArray">
+	    	<img ng-src="{{myMatch.imageURL}}">
+	    	<h2>{{myMatch.u1Firstname + "+" + myMatch.u2Firstname}}</h2>
+	    </div>
+	<!-- PENDNIG LIST -->
+	    <div class="item item-divider">
+	    	Pending
+  		</div>
+	    <div class="item item-avatar" ng-repeat = "myPotentialMatch in myMatches.pendingMatches">
+	    	<img ng-src="{{myPotentialMatch.imageURL}}">
+	    	<h2>{{myPotentialMatch.u1Firstname + "+" + myPotentialMatch.u2Firstname}}</h2>
+	    	<!-- <h3>{{myPotentialMatch.status}}</h3> -->
+	    	<!-- Accept/Deny buttons -->
+	    	<h3>Pending</h3>
+	    </div>
+	</div>
+
+	<!-- <ion-list show-delete="shouldShowDelete" show-reorder="shouldShowReorder" can-swipe="listCanSwipe">
+		<ion item ng-repeat = "myPotentialMatch in myMatches.pendingMatchesArray" class="item-thumbnail-left">
+			<img ng-src="{{myPotentialMatch.imageURL}}">
+	    	<h2>{{myPotentialMatch.users[0] + "+" + myPotentialMatch.users[1]}}</h2>
+	    	<h3>{{myPotentialMatch.status}}</h3>
+	    	<ion-option-button class="button-positive" ng-click = "edit(item)"> Reject
+	    	<ion-option-button class="button-positive" ng-click = "edit(item)"> Accept
+	    	<ion-delete-button class="ion-minus-circled" ng-click="items.splice($index, 1)"></ion-delete-button>
+	    </ion-item>
+	</ion-list>
+ -->
+
+  </ion-content>
+</ion-view>

@@ -1,0 +1,20 @@
+<ion-view view-title="Find Match">
+  <ion-content>
+  	<!-- potential match image -->
+  	<div ng-show="findMatch.displayImg" class="row">
+  		<div class = "col col-center"><img class="potential-match" ng-src="{{findMatch.potentialMatches[0].imageURL}}">
+        <h3 class='names'>{{findMatch.potentialMatches[0].u1Firstname + "+" + findMatch.potentialMatches[0].u2Firstname}}</h3>
+      </div> <!-- col-## the ## designates the % width -->
+  	</div>
+
+  	<!-- button bar -->
+  	<div class="button-bar">
+  		<!-- reject match button -->
+	  	<button class="button button button-balanced" ng-click="findMatch.confirmMatch(findMatch.potentialMatches[0], false)">Reject</button>
+	  	<!-- accept match button -->
+	  	<button class="button button button-positive" ng-click="findMatch.confirmMatch(findMatch.potentialMatches[0], true)">Accept</button>
+  		
+  	</div>
+
+  </ion-content>
+</ion-view>
