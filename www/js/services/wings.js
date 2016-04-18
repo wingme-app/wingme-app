@@ -44,8 +44,6 @@ function wings($http, $state, Config, Auth) {
 
     function success(response) {
 
-      console.log('response = ', response);
-
       wingTypes.currentWing = [];
       wingTypes.currentWingsReceived = [];
       wingTypes.currentWingsSent = [];
@@ -111,6 +109,7 @@ function wings($http, $state, Config, Auth) {
       console.log('this is response: ', response);
       console.log('this is wing: ', wing);
       if (wing.status){
+        console.log('in accept');
         var num;
         var wingMoved = wingTypes.wingRequestsReceived.filter(function(item, index){
           num = index;
@@ -120,8 +119,15 @@ function wings($http, $state, Config, Auth) {
         wingTypes.confirmedWings.push(wingMoved[0]);
 
       }
-      else if (!wing.status){
-        wing.status = null;
+      else {
+        console.log('inside reject. this is wing: ', wing);
+        var num;
+        var wingToDelete = wingTypes.wingRequestsReceived.filter(function(item, index){
+          num = index;
+          return item.ID === wing.userID;
+        });
+        wingTypes.wingRequestsReceived.splice(num,1);
+
       }
 
     }
