@@ -80,7 +80,7 @@
         <ion-option-button class="button-positive" ng-click="myWings.updateWing({userID: wing.ID, status: true})">
           Accept
         </ion-option-button>
-        <ion-option-button class="button-assertive" ng-click="myWings.updateWing(wing.ID,false)">
+        <ion-option-button class="button-assertive" ng-click="myWings.updateWing({userID: wing.ID,status: false})">
           Deny
         </ion-option-button>
       </ion-item>
