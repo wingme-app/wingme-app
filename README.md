@@ -48,17 +48,17 @@ ionic serve
 
 * Visit the localhost address that Ionic indicates.
 
-# Front-end
+### Front-end
 
 WingMe utilizes AngularJS and Ionic Components to render the front-end. We used the industry-standard ui-router for application routing and built-in Angular factories for state management.
 
 All API calls are made in the corresponding factory file associated for the type of data that it’s maintaining.
 
-# Back-end
+### Back-end
 
 WingMe’s custom RESTFul API is built with Node.js and Express, and data management is handled by KnexJS and SQLite.
 
-# WingMe Team
+## WingMe Team
 
 * [Xiaolu Bai](https://github.com/lbai001)
 * [Ben Richter](https://github.com/bjr22)
